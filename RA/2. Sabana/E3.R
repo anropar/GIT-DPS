@@ -2,6 +2,8 @@
 #Validaciones Estrategia DATA#
 ################################
 
+DATA_HOG=DATA[!duplicated(DATA$A01),]#Genera base de datos a nivel de hogar
+
 ############
 #VALIDACION#
 ############
@@ -11,22 +13,8 @@ setwd(paste(Carpeta,"2. Sabana","General", sep = slash))
 ############
 #Duplicados#
 ############
-
-# source("Duplicados.R")
-# 
-# ##########
-# #Formatos#
-# ##########
-# setwd(paste(Carpeta,"2. Sabana","Version", sep = slash))
-# source("Formatos.R")# Contiene las variables definidas en el diccionario de datos correspondiente
-
-#########################
-#Generacion de variables#
-#########################
-
-# # Las variables generadas se requieren para calculos posteriores.
-# setwd(paste(Carpeta,"2. Sabana","General", sep = slash))
-# source("Generacion de campos.R")
+setwd(paste(Carpeta,"2. Sabana","General", sep = slash))
+source("Duplicados.R")
 
 ################
 # Validaciones #

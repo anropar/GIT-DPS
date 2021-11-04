@@ -104,6 +104,7 @@ Error_VA_E01_4=DATA[DATA$E01_4 %in% "" | !between(nchar(as.character(DATA$E01_4)
 Error_VA_E02=DATA[is.na(DATA$E02) | DATA$E02 %in% "",c(Identificador,"E02")]
 Error_VA_E02_1=DATA[!between(DATA$E02_1,0,120)|
                     is.na(DATA$E02_1), c(Identificador,"E02","E02_1")]
+
 Error_VA_E03=DATA[!DATA$E03 %in% c("1","2","3"),c(Identificador,"E03")]
 
 Error_VA_E06=DATA[!DATA$E06 %in% c("1","2"), c(Identificador,"E06")]

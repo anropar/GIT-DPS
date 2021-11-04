@@ -12,7 +12,7 @@
 # LOGRO27.R (Path: Validaciones/3. Calculos/Logros)
 # LOGRO28.R (Path: Validaciones/3. Calculos/Logros)
 
-Fecha = "20211022"
+Fecha = gsub("-","", Sys.Date())
 
 Carpeta = dirname(rstudioapi::getSourceEditorContext()$path)#El ultimo slash o backslash no se debe incluir
 
@@ -56,10 +56,6 @@ source("Formatos.R")# Contiene las variables definidas en el diccionario de dato
 setwd(paste(Carpeta,"2. Sabana","General", sep = slash))
 source("Generacion de campos.R")
 
-##################################
-# Validaciones Estrategia Unidos #
-##################################
-
 ###########################
 # 2. Etapas de validacion #
 ###########################
@@ -69,14 +65,10 @@ setwd(paste(paste(Carpeta,"2. Sabana", sep = slash),"Salidas", sep = slash))
 dir.create(paste0("Validacion_",Fecha), showWarnings = FALSE)#Crea una nueva carpeta
 
 # ValidaciOn de la primera etapa - Nombres de los campos
-#Para seleccionar sabana UNIDOS o sabana SISBEN, hacer la activacion en 2. Sabana / Version / Diccionarios.R,
-#filas 72 en adelante
-
 setwd(paste(Carpeta,"2. Sabana", sep = slash))
 source("E1.R")
 
 # Validacion de la segunda etapa - Valores admisibles
-# Seleccion base UNIDOS o SISBEN:  2. Sabana / Version / Formatos.R
 setwd(paste(Carpeta,"2. Sabana", sep = slash))
 source("E2.R")
 

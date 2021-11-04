@@ -5,7 +5,7 @@
 #Versión de diccionario de datos: "DiccionarioDatos_FormularioCaracterizacion_2019_V6"
 setwd(paste(Carpeta,"1. Entradas", sep = slash))
 
-Campos = read_excel("PlantillaRegistrosAdministrativos_20210930.xlsm", sheet = "Plantilla")
+Campos = read_excel("PlantillaRegistrosAdministrativos_20211008.xlsm", sheet = "Plantilla")
 Campos = names(Campos)
 
 setwd(paste(Carpeta,"2. Sabana","General", sep = slash))

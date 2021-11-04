@@ -144,8 +144,6 @@ Error_FL_E01_4=DATA[nchar(as.character(DATA$E01_4))<=1 | grepl("[[:digit:]]", DA
 
 Error_FL_E02_1= DATA[!between(DATA$E02_1,0,120) | DATA$E02_1!=DATA$E02_1, c(Identificador,"E02_1","E02_1")]
 
-Error_FL_E03=DATA[!(DATA$E03 %in% c("1","2","3")),c(Identificador,"E03")]
-
 Error_FL_E06_1=DATA[(DATA$E06 %in% 2 & DATA$E06_1 %in% 999), c(Identificador,"E06","E06_1")]
 
 ###
