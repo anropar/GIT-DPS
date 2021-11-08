@@ -11,8 +11,7 @@ DATA$`TIPO DOCUMENTO` = as.numeric(as.character(recode_factor(DATA$`TIPO DOCUMEN
                                                               `Salvoconducto para refugiado` = 7,
                                                               `Permiso especial de permanencia (PEP) para ciudadanos venezolanos` = 8)))
 
-
-DATA$Cruce = ifelse(paste(DATA$`TIPO DOCUMENTO`,DATA$`NUMERO DOCUMENTO`) %in% paste(DATA$E08,DATA$E09),1,0)
+DATA$Cruce = ifelse(paste(DATA$`TIPO DOCUMENTO`,DATA$`NUMERO DOCUMENTO`) %in% paste(Precargue$E08,Precargue$E09),1,0)
 
 DATA$`TIPO DOCUMENTO` = as.character(recode_factor(DATA$`TIPO DOCUMENTO`, `1` = "Registro Civil",
                                                    `2` = "Tarjeta de Identidad", `3` = "Cédula de Ciudadanía",
