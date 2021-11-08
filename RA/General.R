@@ -74,7 +74,7 @@ source("E1.R")
 
 # Validacion de la segunda etapa - Valores admisibles
 setwd(paste(Carpeta,"2. Sabana", sep = slash))
-source("E2.R")
+source("E2.R", encoding = "UTF-8")
 
 # Validacion de la tercera etapa - Flujos de los datos
 setwd(paste(Carpeta,"2. Sabana", sep = slash))

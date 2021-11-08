@@ -9,7 +9,7 @@ setwd(Entradas)# Se difine el directorio donde se encuentra el archivo que se va
 ########################
 tictoc::tic("Total")
 
-DATA <- read_excel("PlantillaRegistrosAdministrativos_20211008.xlsm", sheet = "Plantilla")
+DATA <- read_excel("PlantillaRegistrosAdministrativos_2112021.xlsm", sheet = "Plantilla")
 
 Campos = names(DATA)
 
@@ -35,9 +35,9 @@ Precargue = read_delim("Unidos_Sabana_20211027.txt",
                                                                J04 = col_number(),
                                                                J12 = col_number(),
                                                                J13 = col_number(),
-                                                               J13_1 = col_number()), locale = locale(grouping_mark = ",", encoding = "ISO-8859-1"), trim_ws = TRUE, n_max = 2500)
+                                                               J13_1 = col_number()), locale = locale(grouping_mark = ",", encoding = "ISO-8859-1"), trim_ws = TRUE)
 
-Oferta = read_excel("Oferta disponible 20211103 (2).xlsx")
+Oferta = read_excel("Oferta disponible 20211103.xlsx")
 
 setnames(Oferta, old = "Logro Asociado", new = "LOGRO y/o PRIVACIÓN GESTIONADA")
 
