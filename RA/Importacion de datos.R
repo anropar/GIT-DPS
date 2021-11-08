@@ -11,6 +11,8 @@ tictoc::tic("Total")
 
 DATA <- read_excel("PlantillaRegistrosAdministrativos_2112021.xlsm", sheet = "Plantilla")
 
+DATA = DATA %>% drop_na(`TIPO DOCUMENTO`, `NUMERO DOCUMENTO`)
+
 Campos = names(DATA)
 
 DATA = DATA %>% select(-c("DEPARTAMENTO","CODIGO DEPARTAMENTO DANE","MUNICIPIO","CODIGO MUNICIPIO DANE","LOGRO y/o PRIVACIÓN GESTIONADA","FECHA DE NACIMIENTO","SEXO"))
