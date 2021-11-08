@@ -93,4 +93,4 @@ setwd(paste(Carpeta,"3. Calculos","Salidas", sep = slash))# Se define la carpeta
 write.csv(DATA, file =paste("RA_V1","_",format(Sys.time(), "%d%m%Y"),".csv", sep=""), row.names = FALSE)
 write.csv(DATA %>% select(-c("A01","IdIntegrante")), file =paste("RA_V2","_",format(Sys.time(), "%d%m%Y"),".csv", sep=""), row.names = FALSE)
 
-# Prueba
+# Prueba con Jorge
