@@ -64,9 +64,9 @@ source("E1.R")
 #Generacion de variables#
 #########################
 
-# Las variables generadas se requieren para calculos posteriores.
-# setwd(paste(Carpeta,"2. Sabana","General", sep = slash))
-# source("Generacion de campos.R")
+#Las variables generadas se requieren para calculos posteriores.
+setwd(paste(Carpeta,"2. Sabana","General", sep = slash))
+source("Generacion de campos.R")
 
 # # Se cambian los nombres de los campos para poder avanzar en la validacion
 # setwd(paste(Carpeta,"2. Sabana", sep = slash))
