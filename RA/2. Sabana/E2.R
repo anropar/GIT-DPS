@@ -27,4 +27,4 @@ source("Errores_vacios_VA.R")
 setwd(paste(Carpeta,"2. Sabana","General", sep = slash))
 source("Generacion de salidas_T2.R")#Se utiliza para dirigir las salidas a las carpetas definidas.
 
-rm(list = ls()[!ls() %in% grep("^DATA|Error|Resumen|Version|Salidas|Entradas|Carpeta|General|Fecha|slash",ls(),value = TRUE)])
+rm(list = ls()[!ls() %in% grep("^DATA|Precargue|Oferta|Error|Resumen|Version|Salidas|Entradas|Carpeta|General|Fecha|slash",ls(),value = TRUE)])
