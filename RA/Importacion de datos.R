@@ -15,7 +15,7 @@ Campos = names(DATA)
 
 DATA = DATA %>% select(-c("DEPARTAMENTO","CODIGO DEPARTAMENTO DANE","MUNICIPIO","CODIGO MUNICIPIO DANE","LOGRO y/o PRIVACIÓN GESTIONADA","FECHA DE NACIMIENTO","SEXO"))
 
-Precargue = read_delim("Unidos_Sabana_20211022.txt",
+Precargue = read_delim("Unidos_Sabana_20211027.txt",
                   "|", escape_double = FALSE, col_types = cols(Longitud = col_character(),
                                                                Latitud = col_character(),
                                                                Altitud = col_character(),
