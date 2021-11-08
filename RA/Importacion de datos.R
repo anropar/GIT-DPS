@@ -41,11 +41,12 @@ Oferta = read_excel("Oferta disponible 20211103.xlsx")
 
 setnames(Oferta, old = "Logro Asociado", new = "LOGRO y/o PRIVACIÓN GESTIONADA")
 
-DATA$`TIPO DOCUMENTO` = as.numeric(recode_factor(DATA$`TIPO DOCUMENTO`, `Registro Civil` = 1,
-                                       `Tarjeta de Identidad` = 2, `Cédula de Ciudadanía` = 3,
-                                       `CE` = 4, `Documento Nacional de Identidad (DNI) del país de origen` = 5,
-                                       `Pasaporte` = 6, `Salvoconducto para refugiado` = 7,
-                                       `Permiso especial de permanencia (PEP) para ciudadanos venezolanos` = 8))
+DATA$`TIPO DOCUMENTO` = as.numeric(as.character(recode_factor(DATA$`TIPO DOCUMENTO`, `Registro Civil` = 1,
+                                                              `Tarjeta de Identidad` = 2, `Cédula de Ciudadanía` = 3,
+                                                              `Cédula de Extranjería` = 4, `Documento Nacional de Identidad (DNI) del país de origen` = 5,
+                                                              `Pasaporte` = 6,
+                                                              `Salvoconducto para refugiado` = 7,
+                                                              `Permiso especial de permanencia (PEP) para ciudadanos venezolanos` = 8)))
 
 # Merge
 DATA = merge(DATA, Precargue[c("A01","IdIntegrante","A02","A02_1","A03","A03_1","E02","E03","E08","E09")], by.x = c("TIPO DOCUMENTO","NUMERO DOCUMENTO"), by.y = c("E08","E09"), all.x = T)
