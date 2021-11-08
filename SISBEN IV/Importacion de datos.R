@@ -9,7 +9,7 @@ setwd(Entradas)# Se difine el directorio donde se encuentra el archivo que se va
 #####################
 tictoc::tic("Total")
 
-DATA = read_delim("Unidos_Sabana_20211022.txt",
+DATA = read_delim("Unidos_Sabana_20211027.txt",
                     "|", escape_double = FALSE, col_types = cols(Longitud = col_character(),
                                                                  Latitud = col_character(),
                                                                  Altitud = col_character(),
@@ -31,7 +31,7 @@ DATA = read_delim("Unidos_Sabana_20211022.txt",
                                                                  J13 = col_number(),
                                                                  J13_1 = col_number()), locale = locale(grouping_mark = ",", encoding = "ISO-8859-1"), trim_ws = TRUE)
 
-DATA = DATA %>% select(-EdadCargue)
+# DATA = DATA %>% select(-EdadCargue)
 #
 # DATA = DATA %>% select(-E02_1)
 # setnames(DATA, old = "EdadCargue", new = "E02_1")
@@ -45,16 +45,16 @@ DATA = DATA %>% select(-EdadCargue)
 
 # DATA = read_delim("Unidos_Sabana_2021.csv", "|", escape_double = FALSE, locale = locale(encoding = "ISO-8859-1"),  trim_ws = TRUE)
 #
-Campos_DATA = read_excel("Campos_Unidos_2015_2021.xlsx")
-Campos_DATA$LOGROS = apply(Campos_DATA[grep("LOGRO", names(Campos_DATA), value = T)], 1, function(i){ paste(na.omit(i), sep = ",", collapse = ",") })
-Campos_DATA = Campos_DATA[!is.na(Campos_DATA$`SISBEN IV`) & !is.na(Campos_DATA$`UNIDOS 2020`), c(1:8,46)]
+# Campos_DATA = read_excel("Campos_Unidos_2015_2021.xlsx")
+# Campos_DATA$LOGROS = apply(Campos_DATA[grep("LOGRO", names(Campos_DATA), value = T)], 1, function(i){ paste(na.omit(i), sep = ",", collapse = ",") })
+# Campos_DATA = Campos_DATA[!is.na(Campos_DATA$`SISBEN IV`) & !is.na(Campos_DATA$`UNIDOS 2020`), c(1:8,46)]
 # Campos_DATA = Campos_DATA[!is.na(Campos_DATA$`UNIDOS 2020`), c(1:8,46)]
 #
 # Campos_DATA = Campos_DATA[!Campos_DATA$LOGROS=="",]
 #
 # DATA = DATA[c("A01","IdIntegrante","A02_1",Campos_DATA$`UNIDOS 2020`)]
-
-DATA = DATA[Campos_DATA$`UNIDOS 2020`]
+# 
+# DATA = DATA[Campos_DATA$`UNIDOS 2020`]
 
 rm(Campos_DATA)
 
