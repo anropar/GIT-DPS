@@ -19,3 +19,6 @@ DATA$`TIPO DOCUMENTO` = as.character(recode_factor(DATA$`TIPO DOCUMENTO`, `1` = 
                                                    `4` = "Cédula de Extranjería", `5` = "Documento Nacional de Identidad (DNI) del país de origen",
                                                    `6` = "Pasaporte", `7` = "Salvoconducto para refugiado",
                                                    `8` = "Permiso especial de permanencia (PEP) para ciudadanos venezolanos"))
+
+DATA$Duplicados = ifelse(duplicated(paste(DATA$`TIPO DOCUMENTO`,DATA$`NUMERO DOCUMENTO`)),1,0)
+  
