@@ -41,7 +41,7 @@ Precargue = read_delim("Unidos_Sabana_20211027.txt",
                                                                J13 = col_number(),
                                                                J13_1 = col_number()), locale = locale(grouping_mark = ",", encoding = "ISO-8859-1"), trim_ws = TRUE)
 
-Oferta = read_excel("Oferta disponible 20211103.xlsx")
+Oferta = read_excel("Oferta disponible 20211109.xlsx")
 
 setnames(Oferta, old = "Logro Asociado", new = "LOGRO y/o PRIVACIÓN GESTIONADA")
 
