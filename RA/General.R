@@ -89,7 +89,7 @@ view(dfSummary(as.data.frame(DATA)))# Estadística descriptiva del cálculo de D
 # 7. Exportaciones  #
 #####################
 # Exportación de los Registros Administrativos
-setwd(paste(Carpeta,"3. Calculos","Salidas", sep = slash))# Se define la carpeta donde se va a exportar el cálculo de LOGROS
+setwd(paste(Carpeta,"Salidas", sep = slash))# Se define la carpeta donde se va a exportar el cálculo de LOGROS
 write.csv(DATA, file =paste("RA_V1","_",format(Sys.time(), "%d%m%Y"),".csv", sep=""), row.names = FALSE)
 write.csv(DATA %>% select(-c("A01","IdIntegrante")), file =paste("RA_V2","_",format(Sys.time(), "%d%m%Y"),".csv", sep=""), row.names = FALSE)
 
