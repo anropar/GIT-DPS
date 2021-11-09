@@ -9,9 +9,11 @@ setwd(Entradas)# Se difine el directorio donde se encuentra el archivo que se va
 ########################
 tictoc::tic("Total")
 
-DATA <- read_excel("PlantillaRegistrosAdministrativos_2112021.xlsm", sheet = "Plantilla")
+data.files = list.files(pattern = "*.xlsm")
 
-DATA = DATA %>% drop_na(`TIPO DOCUMENTO`, `NUMERO DOCUMENTO`)
+DATA <- do.call(rbind, lapply(data.files, function(x) cbind(read_excel(x, sheet = "Plantilla"), Archivo=strsplit(x,'\\.')[[1]][1])))
+
+DATA = DATA %>% drop_na(`NUMERO DOCUMENTO`)
 
 Campos = names(DATA)
 
