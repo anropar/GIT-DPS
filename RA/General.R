@@ -91,6 +91,7 @@ view(dfSummary(as.data.frame(DATA)))# Estadística descriptiva del cálculo de D
 # Exportación de los Registros Administrativos
 setwd(paste(Carpeta,"2. Sabana","Salidas", sep = slash))# Se define la carpeta donde se va a exportar el cálculo de LOGROS
 write.csv(DATA, file =paste("RA_V1","_",format(Sys.time(), "%d%m%Y"),".csv", sep=""), row.names = FALSE)
+write.csv(DATA[DATA$Cruce %in% 1 & DATA$Duplicados_Logro %in% 0 & !is.na(DATA$`LOGRO y/o PRIVACIÓN GESTIONADA`),], file =paste("Segundo_Cargue","_",format(Sys.time(), "%d%m%Y"),".csv", sep=""), row.names = FALSE)
 write.csv(DATA %>% select(-c("A01","IdIntegrante")), file =paste("RA_V2","_",format(Sys.time(), "%d%m%Y"),".csv", sep=""), row.names = FALSE)
 
 # Prueba con Jorge
