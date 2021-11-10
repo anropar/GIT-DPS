@@ -12,37 +12,42 @@ tictoc::tic("Total")
 data.files = list.files(pattern = "*.xlsm")
 data.files = grep("PlantillaRegistrosAdministrativos_20211008", data.files, value = T, invert = T)
 
-DATA <- do.call(rbind, lapply(data.files, function(x) cbind(read_excel(x, sheet = "Plantilla"), Archivo=strsplit(x,'\\.')[[1]][1])))
+Original <- do.call(rbind, lapply(data.files, function(x) cbind(read_excel(x, sheet = "Plantilla", col_types = c("numeric", "text", "text", "text", "text", "text", "text", 
 
-DATA = DATA  %>%  filter(if_any(names(DATA[-17]), ~ !is.na(.x)))
+                                                                                                                                                                                                                          "text", "text", "text", "text", "text", "date", "text", "date", "text") ), Archivo=strsplit(x,'\\.')[[1]][1])))
 
-DATA = DATA %>% drop_na(`NUMERO DOCUMENTO`)
 
-Precargue = read_delim("Unidos_Sabana_20211027.txt",
-                       "|", escape_double = FALSE, col_types = cols(Longitud = col_character(),
-                                                                    Latitud = col_character(),
-                                                                    Altitud = col_character(),
-                                                                    FechaInicio = col_date(format = "%Y-%m-%d"),
-                                                                    E02 = col_date(format = "%Y-%m-%d"),
-                                                                    E10 = col_date(format = "%Y-%m-%d"),
-                                                                    C01 = col_number(),
-                                                                    C02 = col_number(),
-                                                                    C03 = col_number(),
-                                                                    C04 = col_number(),
-                                                                    C10_1 = col_number(),
-                                                                    C11_1 = col_number(),
-                                                                    D02 = col_number(),
-                                                                    E02_1 = col_number(),
-                                                                    G06 = col_number(),
-                                                                    I04_1 = col_number(),
-                                                                    J04 = col_number(),
-                                                                    J12 = col_number(),
-                                                                    J13 = col_number(),
-                                                                    J13_1 = col_number()), locale = locale(grouping_mark = ",", encoding = "ISO-8859-1"), trim_ws = TRUE)
+Original = Original  %>%  filter(if_any(names(Original[-17]), ~ !is.na(.x)))
 
-Oferta = read_excel("Oferta disponible 20211109.xlsx")
-library(stringr)
-Oferta$`Cód Municipio`=str_pad(Oferta$`Cód Municipio`, 5, pad = "0")
+DATA = Original %>% drop_na(`NUMERO DOCUMENTO`)
+
+# Precargue = read_delim("Unidos_Sabana_20211027.txt",
+#                        "|", escape_double = FALSE, col_types = cols(Longitud = col_character(),
+#                                                                     Latitud = col_character(),
+#                                                                     Altitud = col_character(),
+#                                                                     FechaInicio = col_date(format = "%Y-%m-%d"),
+#                                                                     E02 = col_date(format = "%Y-%m-%d"),
+#                                                                     E10 = col_date(format = "%Y-%m-%d"),
+#                                                                     C01 = col_number(),
+#                                                                     C02 = col_number(),
+#                                                                     C03 = col_number(),
+#                                                                     C04 = col_number(),
+#                                                                     C10_1 = col_number(),
+#                                                                     C11_1 = col_number(),
+#                                                                     D02 = col_number(),
+#                                                                     E02_1 = col_number(),
+#                                                                     G06 = col_number(),
+#                                                                     I04_1 = col_number(),
+#                                                                     J04 = col_number(),
+#                                                                     J12 = col_number(),
+#                                                                     J13 = col_number(),
+#                                                                     J13_1 = col_number()), locale = locale(grouping_mark = ",", encoding = "ISO-8859-1"), trim_ws = TRUE)
+# 
+# Oferta = read_excel("Oferta disponible 20211109.xlsx")
+# library(stringr)
+# Oferta$`Cód Municipio`=str_pad(Oferta$`Cód Municipio`, 5, pad = "0")
+
+DATA$`FECHA DE NACIMIENTO` = as.Date(DATA$`FECHA DE NACIMIENTO`, format='%Y-%m-%d')
 
 DATA$DEPARTAMENTO = ifelse(is.na(DATA$DEPARTAMENTO) & DATA$`NUMERO DOCUMENTO` %in% Precargue$E09, Precargue$A02, DATA$DEPARTAMENTO) 
 DATA$`CODIGO DEPARTAMENTO DANE` = ifelse(is.na(DATA$`CODIGO DEPARTAMENTO DANE`) & DATA$`NUMERO DOCUMENTO` %in% Precargue$E09, Precargue$A02_1, DATA$`CODIGO DEPARTAMENTO DANE`) 
@@ -67,15 +72,11 @@ DATA$`TIPO DOCUMENTO` = recode(DATA$`TIPO DOCUMENTO`,  `1` = "Registro Civil", `
 
 DATA$SEXO = recode(DATA$SEXO, `1` = "Hombre", `2` = "Mujer")
 
-# DATA = merge(DATA, Precargue[c("E09","E01_1","E01_2","E01_3","E01_4","A03_1")], by.x = c("NUMERO DOCUMENTO","CODIGO MUNICIPIO DANE"), by.y = c("E09","A03_1"), all.x = T)
-# DATA = DATA_1
-
-tictoc::toc()
-
-# Duplicados_Precargue = Precargue[duplicated(Precargue$E09) | duplicated(Precargue$E09,fromLast = T),]
-# Duplicados_DATA = Precargue[duplicated(Precargue$E09) | duplicated(Precargue$E09,fromLast = T),]
-
+# DATA$`FECHA DE NACIMIENTO` = gsub("/","-",format(as.Date(DATA$`FECHA DE NACIMIENTO`),'%d/%m/%Y'))
+# DATA$`FECHA DE LA ATENCIÓN` = gsub("/","-",format(as.Date(DATA$`FECHA DE LA ATENCIÓN`),'%d/%m/%Y'))
 
 # No van a estar los A01 y IdIntegrante
 # Sin información en: DEPARTAMENTO, CODIGO DEPARTAMENTO DANE, MUNICIPIO, CODIGO MUNICIPIO DANE, FECHA DE NACIMIENTO y SEXO. Se obtienen del precargue con cruce fonetico y documento
 # LOGRO y/o PRIVACIÓN GESTIONADA se obtiene de la oferta disponible y la llave es el ID OFERTA. 
+
+tictoc::toc()

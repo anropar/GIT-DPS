@@ -83,7 +83,6 @@ source("E3.R")
 ################################
 # 6. Estadasticas descriptivas #
 ################################
-Consulta=DATA[DATA$Cruce %in% 1 & DATA$Duplicados_Logro %in% 0 & !is.na(DATA$`LOGRO y/o PRIVACIÓN GESTIONADA`),]
 
 view(dfSummary(as.data.frame(DATA)))# Estadística descriptiva del cálculo de DATA
 view(dfSummary(as.data.frame(Consulta)))# Estadística descriptiva del cálculo de DATA
@@ -108,4 +107,4 @@ write.csv(Consulta[round((nrow(Consulta)/2),0):round((nrow(Consulta)),0),] %>% s
 
 write.csv(Consulta %>% select(-c("Archivo","Cruce","Duplicados","Duplicados_Logro","Cruce_Oferta")), file =paste("Segundo_Cargue","_",format(Sys.time(), "%d%m%Y"),".csv", sep=""), row.names = FALSE)
 
-write.csv(as.data.frame(table(DATA$Archivo)), file =paste("RA_Archivos_Documento","_",format(Sys.time(), "%d%m%Y"),".csv", sep=""), row.names = FALSE)
+write.csv(as.data.frame(table(Consulta$Archivo)), file =paste("RA_Archivos_Documento","_",format(Sys.time(), "%d%m%Y"),".csv", sep=""), row.names = FALSE)
