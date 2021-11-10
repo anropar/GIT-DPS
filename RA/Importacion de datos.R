@@ -14,6 +14,8 @@ data.files = grep("PlantillaRegistrosAdministrativos_20211008", data.files, valu
 
 DATA <- do.call(rbind, lapply(data.files, function(x) cbind(read_excel(x, sheet = "Plantilla"), Archivo=strsplit(x,'\\.')[[1]][1])))
 
+DATA = DATA  %>%  filter(if_any(names(DATA[-17]), ~ !is.na(.x)))
+
 DATA = DATA %>% drop_na(`NUMERO DOCUMENTO`)
 
 Precargue = read_delim("Unidos_Sabana_20211027.txt",
@@ -65,8 +67,14 @@ DATA$`TIPO DOCUMENTO` = recode(DATA$`TIPO DOCUMENTO`,  `1` = "Registro Civil", `
 
 DATA$SEXO = recode(DATA$SEXO, `1` = "Hombre", `2` = "Mujer")
 
+# DATA = merge(DATA, Precargue[c("E09","E01_1","E01_2","E01_3","E01_4","A03_1")], by.x = c("NUMERO DOCUMENTO","CODIGO MUNICIPIO DANE"), by.y = c("E09","A03_1"), all.x = T)
+# DATA = DATA_1
 
 tictoc::toc()
+
+# Duplicados_Precargue = Precargue[duplicated(Precargue$E09) | duplicated(Precargue$E09,fromLast = T),]
+# Duplicados_DATA = Precargue[duplicated(Precargue$E09) | duplicated(Precargue$E09,fromLast = T),]
+
 
 # No van a estar los A01 y IdIntegrante
 # Sin información en: DEPARTAMENTO, CODIGO DEPARTAMENTO DANE, MUNICIPIO, CODIGO MUNICIPIO DANE, FECHA DE NACIMIENTO y SEXO. Se obtienen del precargue con cruce fonetico y documento

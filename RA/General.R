@@ -83,15 +83,29 @@ source("E3.R")
 ################################
 # 6. Estadasticas descriptivas #
 ################################
+Consulta=DATA[DATA$Cruce %in% 1 & DATA$Duplicados_Logro %in% 0 & !is.na(DATA$`LOGRO y/o PRIVACIÓN GESTIONADA`),]
+
 view(dfSummary(as.data.frame(DATA)))# Estadística descriptiva del cálculo de DATA
+view(dfSummary(as.data.frame(Consulta)))# Estadística descriptiva del cálculo de DATA
+view(dfSummary(as.data.frame(Segundo_Cargue_09112021)))# Estadística descriptiva del cálculo de DATA
 
 #####################
 # 7. Exportaciones  #
 #####################
 # Exportación de los Registros Administrativos
 setwd(paste(Carpeta,"2. Sabana","Salidas", sep = slash))# Se define la carpeta donde se va a exportar el cálculo de LOGROS
-write.csv(DATA, file =paste("RA_V1","_",format(Sys.time(), "%d%m%Y"),".csv", sep=""), row.names = FALSE)
-write.csv(DATA[DATA$Cruce %in% 1 & DATA$Duplicados_Logro %in% 0 & !is.na(DATA$`LOGRO y/o PRIVACIÓN GESTIONADA`),], file =paste("Segundo_Cargue","_",format(Sys.time(), "%d%m%Y"),".csv", sep=""), row.names = FALSE)
-write.csv(DATA %>% select(-c("A01","IdIntegrante")), file =paste("RA_V2","_",format(Sys.time(), "%d%m%Y"),".csv", sep=""), row.names = FALSE)
 
-# Prueba con Jorge
+write.csv(DATA, file =paste("RA_V1","_",format(Sys.time(), "%d%m%Y"),".csv", sep=""), row.names = FALSE)
+write.csv(DATA %>% select(-c("A01","IdIntegrante")), file =paste("RA_V2","_",format(Sys.time(), "%d%m%Y"),".csv", sep=""), row.names = FALSE)
+write.csv(Segundo_Cargue_09112021[!Segundo_Cargue_09112021$`NUMERO DOCUMENTO` %in% Prueba$`NUMERO DOCUMENTO`,], file =paste("Diferencia_Tercer_Filtro","_",format(Sys.time(), "%d%m%Y"),".csv", sep=""), row.names = FALSE)
+
+write.csv(Consulta[1:round((nrow(Consulta)/6),0),] %>% select(-c("Archivo","Cruce","Duplicados","Duplicados_Logro","Cruce_Oferta")), file =paste("Segundo_Cargue_1","_",format(Sys.time(), "%d%m%Y"),".csv", sep=""), row.names = FALSE)
+write.csv(Consulta[round((nrow(Consulta)/6),0):round((nrow(Consulta)/5),0),] %>% select(-c("Archivo","Cruce","Duplicados","Duplicados_Logro","Cruce_Oferta")), file =paste("Segundo_Cargue_2","_",format(Sys.time(), "%d%m%Y"),".csv", sep=""), row.names = FALSE)
+write.csv(Consulta[round((nrow(Consulta)/5),0):round((nrow(Consulta)/4),0),] %>% select(-c("Archivo","Cruce","Duplicados","Duplicados_Logro","Cruce_Oferta")), file =paste("Segundo_Cargue_3","_",format(Sys.time(), "%d%m%Y"),".csv", sep=""), row.names = FALSE)
+write.csv(Consulta[round((nrow(Consulta)/4),0):round((nrow(Consulta)/3),0),] %>% select(-c("Archivo","Cruce","Duplicados","Duplicados_Logro","Cruce_Oferta")), file =paste("Segundo_Cargue_4","_",format(Sys.time(), "%d%m%Y"),".csv", sep=""), row.names = FALSE)
+write.csv(Consulta[round((nrow(Consulta)/3),0):round((nrow(Consulta)/2),0),] %>% select(-c("Archivo","Cruce","Duplicados","Duplicados_Logro","Cruce_Oferta")), file =paste("Segundo_Cargue_5","_",format(Sys.time(), "%d%m%Y"),".csv", sep=""), row.names = FALSE)
+write.csv(Consulta[round((nrow(Consulta)/2),0):round((nrow(Consulta)),0),] %>% select(-c("Archivo","Cruce","Duplicados","Duplicados_Logro","Cruce_Oferta")), file =paste("Segundo_Cargue_6","_",format(Sys.time(), "%d%m%Y"),".csv", sep=""), row.names = FALSE)
+
+write.csv(Consulta %>% select(-c("Archivo","Cruce","Duplicados","Duplicados_Logro","Cruce_Oferta")), file =paste("Segundo_Cargue","_",format(Sys.time(), "%d%m%Y"),".csv", sep=""), row.names = FALSE)
+
+write.csv(as.data.frame(table(DATA$Archivo)), file =paste("RA_Archivos_Documento","_",format(Sys.time(), "%d%m%Y"),".csv", sep=""), row.names = FALSE)
