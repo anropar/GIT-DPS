@@ -1,24 +1,10 @@
-# Filtro de los registros adminitrativos por las reglas:
-# 1. Cruzar el Numero de documento con la base precargue.
-# 2. No estar duplicado por numero de documento y logro.
-# 3. Contener los logros definidos en la compilación patterns.
-
-patterns <- c("ACTIVIDAD PRODUCTIVA", "AFILIACIÓN A SALUD", "EDUCACIÓN INICIAL",
-              "ESCOLARIDAD","NO TRABAJO INFANTIL","ACCESO A AGUA","SANEAMIENTO BÁSICO",
-              "LEER Y ESCRIBIR","ESTUDIOS POSTSECUNDARIOS", "NO PISOS EN TIERRA",
-              "PAREDES ADECUADAS","NO HACINAMIENTO","ACTIVIDAD PRODUCTIVA","FAMILIAS EN ACCIÓN")
-
-# Consulta ####
-Consulta_1=DATA[DATA$Cruce %in% 1 & DATA$Duplicados_Logro %in% 0 & 
-                grepl(paste(patterns, collapse="|"), toupper(DATA$`LOGRO y/o PRIVACIÓN GESTIONADA`)),]
-
-Consulta_2=DATA[DATA$Cruce_TIPO_NUMERO %in% 1 & DATA$Duplicados_Logro %in% 0 & 
-                  grepl(paste(patterns, collapse="|"), toupper(DATA$`LOGRO y/o PRIVACIÓN GESTIONADA`)),]
-
-# Nombres ####
+# Distancias de nombres ####
 Prueba = DATA[DATA$Cruce %in% 1,]
 
-Prueba = merge(Prueba, Precargue[c("A01","IdIntegrante","E08","E09","E01_1","E01_2","E01_3","E01_4","A03_1")], by.x = c("TIPO DOCUMENTO","NUMERO DOCUMENTO"), by.y = c("E08","E09"), all.x = T)
+# Prueba = Consulta_1[!paste(Consulta_1$`TIPO DOCUMENTO`, Consulta_1$`NUMERO DOCUMENTO`) %in%
+#                       paste(Consulta_2$`TIPO DOCUMENTO`, Consulta_2$`NUMERO DOCUMENTO`),]
+
+Prueba = merge(Prueba, Precargue[c("A01","IdIntegrante","E08","E09","E01_1","E01_2","E01_3","E01_4","A03_1")], by.x = c("NUMERO DOCUMENTO"), by.y = c("E09"), all.x = T)
 
 setwd("~/GitHub/GIT-DPS/Consultas")
 source("Limpiador de textos.R")
@@ -29,38 +15,34 @@ Prueba$Nombres_PR = paste(Prueba$E01_1, Prueba$E01_3)
 Prueba$Dist_Nombres = mapply(adist, limpiador_texto(Prueba$Nombres_RA), limpiador_texto(Prueba$Nombres_PR))
 Prueba$Dist_Nombres_Porc = (Prueba$Dist_Nombres/nchar(Prueba$Nombres_RA))*100
 
-setwd(paste(Carpeta,"2. Sabana","Salidas", sep = slash))# Se define la carpeta donde se va a exportar el cálculo de LOGROS
-write.csv(Prueba[Prueba$Dist_Nombres %in% 3:41,], file =paste("Distancia_Nombres","_",format(Sys.time(), "%d%m%Y"),".csv", sep=""), row.names = FALSE)
+Consulta = Prueba[!Prueba$Dist_Nombres_Porc>=50,]# Conservo los registros con un porcentaje de distancia inferior al
+# 50 porciento.
 
-# Consulta=Consulta[!paste(Consulta$`NUMERO DOCUMENTO`,Consulta$`LOGRO y/o PRIVACIÓN GESTIONADA`) %in% paste(Primer_Cargue_Registros_Administrativos$`NUMERO DOCUMENTO`, Primer_Cargue_Registros_Administrativos$`LOGRO y/o PRIVACIÓN GESTIONADA`),]
-Consulta=DATA[DATA$Cruce %in% 1,]
-Consulta=DATA[DATA$Cruce %in% 1 & DATA$Duplicados_Logro %in% 0,]
+# setwd(paste(Carpeta,"2. Sabana","Salidas", sep = slash))# Se define la carpeta donde se va a exportar el cálculo de LOGROS
+# write.csv(Prueba[Prueba$Dist_Nombres_Porc>=50,], file =paste("Diferencias_Campos_Basicos","_",format(Sys.time(), "%d%m%Y"),".csv", sep=""), row.names = FALSE)
 
-# Duplicados ####
+# Filtro de los registros adminitrativos por las reglas:
+# 1. Cruzar el Numero de documento con la base precargue.
+# 2. No estar duplicado por numero de documento y logro.
+# 3. Contener los logros definidos en la compilación patterns.
 
-Duplicados_Precargue = Precargue[duplicated(Precargue$E09) | duplicated(Precargue$E09, fromLast = T),c("A01","IdIntegrante","E08","E09","E01_1","E01_2","E01_3","E01_4","A03_1")]
+Consulta_1=Consulta[Consulta$Cruce %in% 1 & Consulta$Duplicados_Logro %in% 0,]
 
-Duplicados_Consulta = Consulta[duplicated(paste(Consulta$`NUMERO DOCUMENTO`, Consulta$`CODIGO MUNICIPIO DANE`)) |
-                                 duplicated(paste(Consulta$`NUMERO DOCUMENTO`, Consulta$`CODIGO MUNICIPIO DANE`), fromLast = T),]
+patterns <- c("ACTIVIDAD PRODUCTIVA", "AFILIACIÓN A SALUD", "EDUCACIÓN INICIAL",
+              "ESCOLARIZACIÓN","NO TRABAJO INFANTIL","ACCESO A AGUA","SANEAMIENTO BÁSICO",
+              "LEER Y ESCRIBIR","ESTUDIOS POSTSECUNDARIOS", "NO PISOS EN TIERRA",
+              "PAREDES ADECUADAS","NO HACINAMIENTO","ACTIVIDAD PRODUCTIVA","FAMILIAS EN ACCIÓN")
 
-DATA$Dist_Nombres = mapply(adist, DATA$Nombre_total_1, DATA$Nombre_total_2)
+# Consulta ####
+Consulta_2=Consulta[Consulta$Cruce %in% 1 & Consulta$Duplicados_Logro %in% 0 & 
+                        grepl(paste(patterns, collapse="|"), toupper(Consulta$`LOGRO y/o PRIVACIÓN GESTIONADA`)),]
 
-# 
-Consulta$`TIPO DOCUMENTO` = as.numeric(as.character(recode_factor(Consulta$`TIPO DOCUMENTO`, `Registro Civil` = 1,
-                                                                  `Tarjeta de Identidad` = 2, `Cédula de Ciudadanía` = 3,
-                                                                  `Cédula de Extranjería` = 4, `Documento Nacional de Identidad (DNI) del país de origen` = 5,
-                                                                  `Pasaporte` = 6,
-                                                                  `Salvoconducto para refugiado` = 7,
-                                                                  `Permiso especial de permanencia (PEP) para ciudadanos venezolanos` = 8)))
+Consulta_3 = Consulta_1[!paste(Consulta_1$`TIPO DOCUMENTO`, Consulta_1$`NUMERO DOCUMENTO`) %in% paste(Consulta_1$`TIPO DOCUMENTO`, Consulta_2$`NUMERO DOCUMENTO`),]
 
-Consulta = merge(Consulta, Precargue[!duplicated(Precargue$E09),c("A01","IdIntegrante","E08","E09","E01_1","E01_2","E01_3","E01_4","A03_1")], by.x = c("NUMERO DOCUMENTO"), by.y = c("E09"), all.x = T)
 
-nrow(Consulta[!duplicated(Consulta$A01),])
-nrow(Consulta[!duplicated(Consulta$IdIntegrante),])
-
-Consulta = Consulta %>% group_by(A01) %>% mutate(Total_Personas = n())
+Consulta_2$`FECHA DE NACIMIENTO` = gsub("/","-",format(as.Date(Consulta_2$`FECHA DE NACIMIENTO`),'%d/%m/%Y'))
+Consulta_2$`FECHA DE LA ATENCIÓN` = gsub("/","-",format(as.Date(Consulta_2$`FECHA DE LA ATENCIÓN`),'%d/%m/%Y'))
 
 setwd(paste(Carpeta,"2. Sabana","Salidas", sep = slash))# Se define la carpeta donde se va a exportar el cálculo de LOGROS
-write.csv(table(Consulta$`LOGRO y/o PRIVACIÓN GESTIONADA`), file =paste("Consulta_Logros","_",format(Sys.time(), "%d%m%Y"),".csv", sep=""), row.names = FALSE)
-
+write.table(Consulta_2, paste("Cargue_RA","_",format(Sys.time(), "%d%m%Y"),".txt", sep=""), sep = ";")
 

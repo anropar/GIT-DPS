@@ -33,7 +33,7 @@ Precargue = read_delim("Unidos_Sabana_20211027.txt",
                                                                     J13_1 = col_number()), locale = locale(grouping_mark = ",", encoding = "ISO-8859-1"), trim_ws = TRUE)
 
 # Oferta
-Oferta = read_excel("Oferta disponible 20211109.xlsx")
+Oferta = read_excel("Oferta disponible 2021112.xlsx")
 library(stringr)
 Oferta$`Cód Municipio`=str_pad(Oferta$`Cód Municipio`, 5, pad = "0")
 
@@ -66,6 +66,7 @@ Original$`TIPO DOCUMENTO` = as.numeric(as.character(recode_factor(Original$`TIPO
                                                                   `Salvoconducto para refugiado` = 7,
                                                                   `Permiso especial de permanencia (PEP) para ciudadanos venezolanos` = 8)))
 
+Original$`ID OFERTA`[Original$`ID OFERTA`==71970 ] <- 71974
 
 #########################
 #Generacion de variables#
@@ -77,24 +78,23 @@ source("Generacion de campos.R")
 
 DATA = Original %>% drop_na(`NUMERO DOCUMENTO`)
 
-
 DATA$`FECHA DE NACIMIENTO` = as.Date(DATA$`FECHA DE NACIMIENTO`, format='%Y-%m-%d')
 
-DATA$DEPARTAMENTO = ifelse(is.na(DATA$DEPARTAMENTO) & DATA$`NUMERO DOCUMENTO` %in% Precargue$E09, Precargue$A02, DATA$DEPARTAMENTO) 
-DATA$`CODIGO DEPARTAMENTO DANE` = ifelse(is.na(DATA$`CODIGO DEPARTAMENTO DANE`) & DATA$`NUMERO DOCUMENTO` %in% Precargue$E09, Precargue$A02_1, DATA$`CODIGO DEPARTAMENTO DANE`) 
-DATA$MUNICIPIO = ifelse(is.na(DATA$MUNICIPIO) & DATA$`NUMERO DOCUMENTO` %in% Precargue$E09, Precargue$A03, DATA$MUNICIPIO) 
-DATA$`CODIGO MUNICIPIO DANE` = ifelse(is.na(DATA$`CODIGO MUNICIPIO DANE`) & DATA$`NUMERO DOCUMENTO` %in% Precargue$E09, Precargue$A03_1, DATA$`CODIGO MUNICIPIO DANE`) 
+# Debido a que el dato de Precargue está más actualizado sobreescribo los registros encontrados.
+DATA$DEPARTAMENTO = ifelse(DATA$`NUMERO DOCUMENTO` %in% Precargue$E09, Precargue$A02, DATA$DEPARTAMENTO) 
+DATA$`CODIGO DEPARTAMENTO DANE` = ifelse(DATA$`NUMERO DOCUMENTO` %in% Precargue$E09, Precargue$A02_1, DATA$`CODIGO DEPARTAMENTO DANE`) 
+DATA$MUNICIPIO = ifelse(DATA$`NUMERO DOCUMENTO` %in% Precargue$E09, Precargue$A03, DATA$MUNICIPIO) 
+DATA$`CODIGO MUNICIPIO DANE` = ifelse(DATA$`NUMERO DOCUMENTO` %in% Precargue$E09, Precargue$A03_1, DATA$`CODIGO MUNICIPIO DANE`) 
 DATA$`FECHA DE NACIMIENTO` = ifelse(is.na(DATA$`FECHA DE NACIMIENTO`) & DATA$`NUMERO DOCUMENTO` %in% Precargue$E09, Precargue$E02, DATA$`FECHA DE NACIMIENTO`) 
 DATA$SEXO = ifelse(is.na(DATA$SEXO) & DATA$`NUMERO DOCUMENTO` %in% Precargue$E09, Precargue$E03, DATA$SEXO) 
 DATA$`TIPO DOCUMENTO` = ifelse(is.na(DATA$`TIPO DOCUMENTO`) & DATA$`NUMERO DOCUMENTO` %in% Precargue$E09, Precargue$E08, DATA$`TIPO DOCUMENTO`) 
 
-DATA$`LOGRO y/o PRIVACIÓN GESTIONADA` = ifelse(is.na(DATA$`LOGRO y/o PRIVACIÓN GESTIONADA`) & paste(DATA$`ID OFERTA`, DATA$`CODIGO MUNICIPIO DANE`) %in% paste(Oferta$`ID Oferta`, Oferta$`Cód Municipio`), Oferta$`Logro Asociado`, DATA$`LOGRO y/o PRIVACIÓN GESTIONADA`) 
-
+DATA$`LOGRO y/o PRIVACIÓN GESTIONADA` = ifelse(paste(DATA$`ID OFERTA`, DATA$`CODIGO MUNICIPIO DANE`) %in% paste(Oferta$`ID Oferta`, Oferta$`Cód Municipio`), Oferta$`Logro Asociado`, DATA$`LOGRO y/o PRIVACIÓN GESTIONADA`) 
 
 DATA$SEXO = recode(DATA$SEXO, `1` = "Hombre", `2` = "Mujer")
 
-# DATA$`FECHA DE NACIMIENTO` = gsub("/","-",format(as.Date(DATA$`FECHA DE NACIMIENTO`),'%d/%m/%Y'))
-# DATA$`FECHA DE LA ATENCIÓN` = gsub("/","-",format(as.Date(DATA$`FECHA DE LA ATENCIÓN`),'%d/%m/%Y'))
+
+DATA$`FECHA DE NACIMIENTO` = as.Date(as.integer(DATA$`FECHA DE NACIMIENTO`), origin = "1970-01-01")
 
 # No van a estar los A01 y IdIntegrante
 # Sin información en: DEPARTAMENTO, CODIGO DEPARTAMENTO DANE, MUNICIPIO, CODIGO MUNICIPIO DANE, FECHA DE NACIMIENTO y SEXO. Se obtienen del precargue con cruce fonetico y documento
