@@ -1,4 +1,3 @@
-
 # Filtro de los registros adminitrativos por las reglas:
 # 1. Cruzar el Numero de documento con la base precargue.
 # 2. No estar duplicado por numero de documento y logro.
@@ -10,25 +9,32 @@ patterns <- c("ACTIVIDAD PRODUCTIVA", "AFILIACIÓN A SALUD", "EDUCACIÓN INICIAL
               "PAREDES ADECUADAS","NO HACINAMIENTO","ACTIVIDAD PRODUCTIVA","FAMILIAS EN ACCIÓN")
 
 # Consulta ####
-Consulta=DATA[DATA$Cruce %in% 1 & DATA$Duplicados_Logro %in% 0 & 
+Consulta_1=DATA[DATA$Cruce %in% 1 & DATA$Duplicados_Logro %in% 0 & 
                 grepl(paste(patterns, collapse="|"), toupper(DATA$`LOGRO y/o PRIVACIÓN GESTIONADA`)),]
+
+Consulta_2=DATA[DATA$Cruce_TIPO_NUMERO %in% 1 & DATA$Duplicados_Logro %in% 0 & 
+                  grepl(paste(patterns, collapse="|"), toupper(DATA$`LOGRO y/o PRIVACIÓN GESTIONADA`)),]
 
 # Nombres ####
 Prueba = DATA[DATA$Cruce %in% 1,]
-Prueba = merge(Prueba, Precargue[c("A01","IdIntegrante","E09","E01_1","E01_2","E01_3","E01_4","A03_1")], by.x = c("NUMERO DOCUMENTO"), by.y = c("E09"), all.x = T)
+
+Prueba = merge(Prueba, Precargue[c("A01","IdIntegrante","E08","E09","E01_1","E01_2","E01_3","E01_4","A03_1")], by.x = c("TIPO DOCUMENTO","NUMERO DOCUMENTO"), by.y = c("E08","E09"), all.x = T)
 
 setwd("~/GitHub/GIT-DPS/Consultas")
 source("Limpiador de textos.R")
 
-Prueba$Nombres_RA = paste(toupper(Prueba$`PRIMER NOMBRE`), toupper(Prueba$`PRIMER APELLIDO`))
+Prueba$Nombres_RA = paste(Prueba$`PRIMER NOMBRE`, limpiador_texto(Prueba$`PRIMER APELLIDO`))
 Prueba$Nombres_PR = paste(Prueba$E01_1, Prueba$E01_3)
 
-Prueba$Dist_Nombres = mapply(adist,Prueba$Nombres_RA, Prueba$Nombres_PR)
+Prueba$Dist_Nombres = mapply(adist, limpiador_texto(Prueba$Nombres_RA), limpiador_texto(Prueba$Nombres_PR))
 Prueba$Dist_Nombres_Porc = (Prueba$Dist_Nombres/nchar(Prueba$Nombres_RA))*100
 
+setwd(paste(Carpeta,"2. Sabana","Salidas", sep = slash))# Se define la carpeta donde se va a exportar el cálculo de LOGROS
+write.csv(Prueba[Prueba$Dist_Nombres %in% 3:41,], file =paste("Distancia_Nombres","_",format(Sys.time(), "%d%m%Y"),".csv", sep=""), row.names = FALSE)
+
 # Consulta=Consulta[!paste(Consulta$`NUMERO DOCUMENTO`,Consulta$`LOGRO y/o PRIVACIÓN GESTIONADA`) %in% paste(Primer_Cargue_Registros_Administrativos$`NUMERO DOCUMENTO`, Primer_Cargue_Registros_Administrativos$`LOGRO y/o PRIVACIÓN GESTIONADA`),]
-# Consulta=DATA[DATA$Cruce %in% 1,]
-# Consulta=DATA[DATA$Cruce %in% 1 & DATA$Duplicados_Logro %in% 0,]
+Consulta=DATA[DATA$Cruce %in% 1,]
+Consulta=DATA[DATA$Cruce %in% 1 & DATA$Duplicados_Logro %in% 0,]
 
 # Duplicados ####
 
