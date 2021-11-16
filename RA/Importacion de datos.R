@@ -74,22 +74,26 @@ Original$`ID OFERTA`[Original$`ID OFERTA`==71970 ] <- 71974
 
 #Las variables generadas se requieren para calculos posteriores.
 setwd(paste(Carpeta,"2. Sabana","General", sep = slash))
-source("Generacion de campos.R")
+source("Generacion de campos.R", encoding = "UTF-8")
 
 DATA = Original %>% drop_na(`NUMERO DOCUMENTO`)
 
 DATA$`FECHA DE NACIMIENTO` = as.Date(DATA$`FECHA DE NACIMIENTO`, format='%Y-%m-%d')
 
 # Debido a que el dato de Precargue está más actualizado sobreescribo los registros encontrados.
-DATA$DEPARTAMENTO = ifelse(DATA$`NUMERO DOCUMENTO` %in% Precargue$E09, Precargue$A02, DATA$DEPARTAMENTO) 
-DATA$`CODIGO DEPARTAMENTO DANE` = ifelse(DATA$`NUMERO DOCUMENTO` %in% Precargue$E09, Precargue$A02_1, DATA$`CODIGO DEPARTAMENTO DANE`) 
-DATA$MUNICIPIO = ifelse(DATA$`NUMERO DOCUMENTO` %in% Precargue$E09, Precargue$A03, DATA$MUNICIPIO) 
-DATA$`CODIGO MUNICIPIO DANE` = ifelse(DATA$`NUMERO DOCUMENTO` %in% Precargue$E09, Precargue$A03_1, DATA$`CODIGO MUNICIPIO DANE`) 
-DATA$`FECHA DE NACIMIENTO` = ifelse(is.na(DATA$`FECHA DE NACIMIENTO`) & DATA$`NUMERO DOCUMENTO` %in% Precargue$E09, Precargue$E02, DATA$`FECHA DE NACIMIENTO`) 
-DATA$SEXO = ifelse(is.na(DATA$SEXO) & DATA$`NUMERO DOCUMENTO` %in% Precargue$E09, Precargue$E03, DATA$SEXO) 
-DATA$`TIPO DOCUMENTO` = ifelse(is.na(DATA$`TIPO DOCUMENTO`) & DATA$`NUMERO DOCUMENTO` %in% Precargue$E09, Precargue$E08, DATA$`TIPO DOCUMENTO`) 
+# DATA = merge(DATA, Precargue[c("E09","E08","A02","A02_1","A03","A03_1","E03")], by.x = "NUMERO DOCUMENTO", by.y = "E09", all.x = T)
 
-DATA$`LOGRO y/o PRIVACIÓN GESTIONADA` = ifelse(paste(DATA$`ID OFERTA`, DATA$`CODIGO MUNICIPIO DANE`) %in% paste(Oferta$`ID Oferta`, Oferta$`Cód Municipio`), Oferta$`Logro Asociado`, DATA$`LOGRO y/o PRIVACIÓN GESTIONADA`) 
+DATA$DEPARTAMENTO = ifelse(DATA$`NUMERO DOCUMENTO` %in% Precargue$E09, Precargue$A02, DATA$DEPARTAMENTO)
+DATA$`CODIGO DEPARTAMENTO DANE` = ifelse(DATA$`NUMERO DOCUMENTO` %in% Precargue$E09, Precargue$A02_1, DATA$`CODIGO DEPARTAMENTO DANE`)
+DATA$MUNICIPIO = ifelse(DATA$`NUMERO DOCUMENTO` %in% Precargue$E09, Precargue$A03, DATA$MUNICIPIO)
+DATA$`CODIGO MUNICIPIO DANE` = ifelse(DATA$`NUMERO DOCUMENTO` %in% Precargue$E09, Precargue$A03_1, DATA$`CODIGO MUNICIPIO DANE`)
+DATA$`FECHA DE NACIMIENTO` = ifelse(is.na(DATA$`FECHA DE NACIMIENTO`) & DATA$`NUMERO DOCUMENTO` %in% Precargue$E09, Precargue$E02, DATA$`FECHA DE NACIMIENTO`)
+DATA$SEXO = ifelse(is.na(DATA$SEXO) & DATA$`NUMERO DOCUMENTO` %in% Precargue$E09, Precargue$E03, DATA$SEXO)
+DATA$`TIPO DOCUMENTO` = ifelse(is.na(DATA$`TIPO DOCUMENTO`) & DATA$`NUMERO DOCUMENTO` %in% Precargue$E09, Precargue$E08, DATA$`TIPO DOCUMENTO`)
+
+DATA = merge(DATA, Oferta[c("ID Oferta","Cód Municipio","Logro Asociado")], by.x = c("ID OFERTA","CODIGO MUNICIPIO DANE"), by.y = c("ID Oferta","Cód Municipio"), all.x = T)
+
+DATA$`LOGRO y/o PRIVACIÓN GESTIONADA` = ifelse(is.na(DATA$`Logro Asociado`), DATA$`LOGRO y/o PRIVACIÓN GESTIONADA`, DATA$`Logro Asociado`) 
 
 DATA$SEXO = recode(DATA$SEXO, `1` = "Hombre", `2` = "Mujer")
 

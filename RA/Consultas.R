@@ -30,6 +30,9 @@ write.csv(Archivos_Cruce_TIPO_DOCUMENTO, file =paste("Archivos_Cruce_TIPO_DOCUME
 Archivos_Consulta_1 = Consulta_1 %>% group_by(Archivo) %>% summarise(Total=n())
 write.csv(Archivos_Consulta_1, file =paste("Archivos_Consulta_1","_",format(Sys.time(), "%d%m%Y"),".csv", sep=""), row.names = FALSE)
 
+Archivos_Consulta_2 = Consulta_2 %>% group_by(Archivo) %>% summarise(Total=n())
+write.csv(Archivos_Consulta_2, file =paste("Archivos_Consulta_2","_",format(Sys.time(), "%d%m%Y"),".csv", sep=""), row.names = FALSE)
+
 # Conteos por archivo de los que cruzaron por documento en dataframe Consulta
 Archivos_Consulta = Consulta %>% group_by(Archivo) %>% summarise(Total=n())
 write.csv(Archivos_Consulta, file =paste("Archivos_Consulta","_",format(Sys.time(), "%d%m%Y"),".csv", sep=""), row.names = FALSE)
@@ -43,6 +46,7 @@ Archivos_Cruce_Logros_Oferta = Consulta %>% group_by(Archivo) %>% summarise(Tota
 write.csv(Archivos_Cruce_Logros_Oferta, file =paste("Archivos_Cruce_Logros_Oferta","_",format(Sys.time(), "%d%m%Y"),".csv", sep=""), row.names = FALSE)
 
 
+write.csv(Consulta_3, file =paste("Diferencia_2","_",format(Sys.time(), "%d%m%Y"),".csv", sep=""), row.names = FALSE)
 
 # DATA = merge(DATA, Precargue[c("A01","IdIntegrante","E09","E01_1","E01_2","E01_3","E01_4","A03_1")], by.x = c("NUMERO DOCUMENTO","CODIGO MUNICIPIO DANE"), by.y = c("E09","A03_1"), all.x = T)
 # Duplicados_DATA = Precargue[duplicated(Precargue$E09) | duplicated(Precargue$E09,fromLast = T),]

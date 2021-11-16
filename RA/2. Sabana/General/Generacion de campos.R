@@ -1,23 +1,13 @@
 # Generación de campos
 
-# DATA$EdadActual = as.integer(age_calc(as.Date(DATA$E02, format = "%d/%m/%Y"), enddate = as.Date(DATA$FechaInicio, format = "%d/%m/%Y"), units = "years", precise = TRUE))
+Original$Cruce = ifelse(Original$`NUMERO DOCUMENTO` %in% Precargue$E09,1,0)
 
-DATA = DATA %>% group_by(A01) %>% mutate(Total_Personas = n())
+Original$Cruce_TIPO_NUMERO = ifelse(paste(Original$`TIPO DOCUMENTO`, Original$`NUMERO DOCUMENTO`) %in% paste(Precargue$E08, as.character(Precargue$E09)),1,0)
 
-# DATA$`TIPO DOCUMENTO` = as.numeric(as.character(recode_factor(DATA$`TIPO DOCUMENTO`, `Registro Civil` = 1,
-#                                                               `Tarjeta de Identidad` = 2, `Cédula de Ciudadanía` = 3,
-#                                                               `Cédula de Extranjería` = 4, `Documento Nacional de Identidad (DNI) del país de origen` = 5,
-#                                                               `Pasaporte` = 6,
-#                                                               `Salvoconducto para refugiado` = 7,
-#                                                               `Permiso especial de permanencia (PEP) para ciudadanos venezolanos` = 8)))
+Original$Duplicados = ifelse(duplicated(Original$`NUMERO DOCUMENTO`),1,0)
 
-DATA$Cruce = ifelse(DATA$`NUMERO DOCUMENTO` %in% Precargue$E09,1,0)
+Original$Duplicados_Logro = ifelse(duplicated(paste(Original$`NUMERO DOCUMENTO`, Original$`LOGRO y/o PRIVACIÓN GESTIONADA`)),1,0)
 
-# DATA$`TIPO DOCUMENTO` = as.character(recode_factor(DATA$`TIPO DOCUMENTO`, `1` = "Registro Civil",
-#                                                    `2` = "Tarjeta de Identidad", `3` = "Cédula de Ciudadanía",
-#                                                    `4` = "Cédula de Extranjería", `5` = "Documento Nacional de Identidad (DNI) del país de origen",
-#                                                    `6` = "Pasaporte", `7` = "Salvoconducto para refugiado",
-#                                                    `8` = "Permiso especial de permanencia (PEP) para ciudadanos venezolanos"))
+Original$Cruce_Oferta = ifelse(paste(Original$`ID OFERTA`, Original$`CODIGO MUNICIPIO DANE`) %in% paste(Oferta$`ID Oferta`, Oferta$`Cód Municipio`),1,0)
 
-DATA$Duplicados = ifelse(duplicated(DATA$`NUMERO DOCUMENTO`),1,0)
-  
+Original$Cruce_Precargue = ifelse(paste(Original$`ID OFERTA`, Original$`CODIGO MUNICIPIO DANE`) %in% paste(Oferta$`ID Oferta`, Oferta$`Cód Municipio`),1,0)
