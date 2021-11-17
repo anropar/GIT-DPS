@@ -68,6 +68,8 @@ Original$`TIPO DOCUMENTO` = as.numeric(as.character(recode_factor(Original$`TIPO
 
 Original$`ID OFERTA`[Original$`ID OFERTA`==71970 ] <- 71974
 
+Original = dplyr::mutate(Original, ID = row_number()) %>% arrange(`NUMERO DOCUMENTO`)
+
 #########################
 #Generacion de variables#
 #########################
@@ -96,7 +98,6 @@ DATA = merge(DATA, Oferta[c("ID Oferta","Cód Municipio","Logro Asociado")], by.
 DATA$`LOGRO y/o PRIVACIÓN GESTIONADA` = ifelse(is.na(DATA$`Logro Asociado`), DATA$`LOGRO y/o PRIVACIÓN GESTIONADA`, DATA$`Logro Asociado`) 
 
 DATA$SEXO = recode(DATA$SEXO, `1` = "Hombre", `2` = "Mujer")
-
 
 DATA$`FECHA DE NACIMIENTO` = as.Date(as.integer(DATA$`FECHA DE NACIMIENTO`), origin = "1970-01-01")
 
