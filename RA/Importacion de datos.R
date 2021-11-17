@@ -78,31 +78,39 @@ Original = dplyr::mutate(Original, ID = row_number()) %>% arrange(`NUMERO DOCUME
 setwd(paste(Carpeta,"2. Sabana","General", sep = slash))
 source("Generacion de campos.R", encoding = "UTF-8")
 
-DATA = Original %>% drop_na(`NUMERO DOCUMENTO`)
+# DATA = Original %>% drop_na(`NUMERO DOCUMENTO`)
 
-DATA$`FECHA DE NACIMIENTO` = as.Date(DATA$`FECHA DE NACIMIENTO`, format='%Y-%m-%d')
+Original$`FECHA DE NACIMIENTO` = as.Date(Original$`FECHA DE NACIMIENTO`, format='%Y-%m-%d')
 
 # Debido a que el dato de Precargue está más actualizado sobreescribo los registros encontrados.
-# DATA = merge(DATA, Precargue[c("E09","E08","A02","A02_1","A03","A03_1","E03")], by.x = "NUMERO DOCUMENTO", by.y = "E09", all.x = T)
+# Original = merge(Original, Precargue[c("E09","E08","A02","A02_1","A03","A03_1","E03")], by.x = "NUMERO DOCUMENTO", by.y = "E09", all.x = T)
 
-DATA$DEPARTAMENTO = ifelse(DATA$`NUMERO DOCUMENTO` %in% Precargue$E09, Precargue$A02, DATA$DEPARTAMENTO)
-DATA$`CODIGO DEPARTAMENTO DANE` = ifelse(DATA$`NUMERO DOCUMENTO` %in% Precargue$E09, Precargue$A02_1, DATA$`CODIGO DEPARTAMENTO DANE`)
-DATA$MUNICIPIO = ifelse(DATA$`NUMERO DOCUMENTO` %in% Precargue$E09, Precargue$A03, DATA$MUNICIPIO)
-DATA$`CODIGO MUNICIPIO DANE` = ifelse(DATA$`NUMERO DOCUMENTO` %in% Precargue$E09, Precargue$A03_1, DATA$`CODIGO MUNICIPIO DANE`)
-DATA$`FECHA DE NACIMIENTO` = ifelse(is.na(DATA$`FECHA DE NACIMIENTO`) & DATA$`NUMERO DOCUMENTO` %in% Precargue$E09, Precargue$E02, DATA$`FECHA DE NACIMIENTO`)
-DATA$SEXO = ifelse(is.na(DATA$SEXO) & DATA$`NUMERO DOCUMENTO` %in% Precargue$E09, Precargue$E03, DATA$SEXO)
-DATA$`TIPO DOCUMENTO` = ifelse(is.na(DATA$`TIPO DOCUMENTO`) & DATA$`NUMERO DOCUMENTO` %in% Precargue$E09, Precargue$E08, DATA$`TIPO DOCUMENTO`)
+Original$DEPARTAMENTO = ifelse(Original$`NUMERO DOCUMENTO` %in% Precargue$E09, Precargue$A02, Original$DEPARTAMENTO)
+Original$`CODIGO DEPARTAMENTO DANE` = ifelse(Original$`NUMERO DOCUMENTO` %in% Precargue$E09, Precargue$A02_1, Original$`CODIGO DEPARTAMENTO DANE`)
+Original$MUNICIPIO = ifelse(Original$`NUMERO DOCUMENTO` %in% Precargue$E09, Precargue$A03, Original$MUNICIPIO)
+Original$`CODIGO MUNICIPIO DANE` = ifelse(Original$`NUMERO DOCUMENTO` %in% Precargue$E09, Precargue$A03_1, Original$`CODIGO MUNICIPIO DANE`)
+Original$`FECHA DE NACIMIENTO` = ifelse(is.na(Original$`FECHA DE NACIMIENTO`) & Original$`NUMERO DOCUMENTO` %in% Precargue$E09, Precargue$E02, Original$`FECHA DE NACIMIENTO`)
+Original$SEXO = ifelse(is.na(Original$SEXO) & Original$`NUMERO DOCUMENTO` %in% Precargue$E09, Precargue$E03, Original$SEXO)
+Original$`TIPO DOCUMENTO` = ifelse(is.na(Original$`TIPO DOCUMENTO`) & Original$`NUMERO DOCUMENTO` %in% Precargue$E09, Precargue$E08, Original$`TIPO DOCUMENTO`)
 
-DATA = merge(DATA, Oferta[c("ID Oferta","Cód Municipio","Logro Asociado")], by.x = c("ID OFERTA","CODIGO MUNICIPIO DANE"), by.y = c("ID Oferta","Cód Municipio"), all.x = T)
+Original = merge(Original, Oferta[c("ID Oferta","Cód Municipio","Logro Asociado")], by.x = c("ID OFERTA","CODIGO MUNICIPIO DANE"), by.y = c("ID Oferta","Cód Municipio"), all.x = T)
 
-DATA$`LOGRO y/o PRIVACIÓN GESTIONADA` = ifelse(is.na(DATA$`Logro Asociado`), DATA$`LOGRO y/o PRIVACIÓN GESTIONADA`, DATA$`Logro Asociado`) 
+Original$`LOGRO y/o PRIVACIÓN GESTIONADA` = ifelse(is.na(Original$`Logro Asociado`), Original$`LOGRO y/o PRIVACIÓN GESTIONADA`, Original$`Logro Asociado`) 
 
-DATA$SEXO = recode(DATA$SEXO, `1` = "Hombre", `2` = "Mujer")
+Original$SEXO = recode(Original$SEXO, `1` = "Hombre", `2` = "Mujer")
 
-DATA$`FECHA DE NACIMIENTO` = as.Date(as.integer(DATA$`FECHA DE NACIMIENTO`), origin = "1970-01-01")
+Original$`FECHA DE NACIMIENTO` = as.Date(as.integer(Original$`FECHA DE NACIMIENTO`), origin = "1970-01-01")
 
 # No van a estar los A01 y IdIntegrante
 # Sin información en: DEPARTAMENTO, CODIGO DEPARTAMENTO DANE, MUNICIPIO, CODIGO MUNICIPIO DANE, FECHA DE NACIMIENTO y SEXO. Se obtienen del precargue con cruce fonetico y documento
 # LOGRO y/o PRIVACIÓN GESTIONADA se obtiene de la oferta disponible y la llave es el ID OFERTA. 
+
+patterns = c("ACTIVIDAD PRODUCTIVA", "AFILIACIÓN A SALUD", "EDUCACIÓN INICIAL",
+             "ESCOLARIZACIÓN","NO TRABAJO INFANTIL","ACCESO A AGUA","SANEAMIENTO BÁSICO",
+             "LEER Y ESCRIBIR","ESTUDIOS POSTSECUNDARIOS", "NO PISOS EN TIERRA",
+             "PAREDES ADECUADAS","NO HACINAMIENTO","ACTIVIDAD PRODUCTIVA","FAMILIAS EN ACCIÓN")
+
+Original$List_Logros = ifelse(grepl(paste(patterns, collapse="|"), toupper(Original$`LOGRO y/o PRIVACIÓN GESTIONADA`)),1,0)
+
 
 tictoc::toc()

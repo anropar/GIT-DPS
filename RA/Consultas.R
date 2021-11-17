@@ -15,7 +15,7 @@ Archivos_Original = Original %>% group_by(Archivo) %>% summarise(Total=n())
 write.csv(Archivos_Original, file =paste("Archivos_Original","_",format(Sys.time(), "%d%m%Y"),".csv", sep=""), row.names = FALSE)
 
 # Conteos por archivo dataframe DATA
-Archivos_DATA = Original %>% group_by(Archivo) %>% summarise(Total=n())
+Archivos_DATA = DATA %>% group_by(Archivo) %>% summarise(Total=n())
 write.csv(Archivos_DATA, file =paste("Archivos_DATA","_",format(Sys.time(), "%d%m%Y"),".csv", sep=""), row.names = FALSE)
 
 # Conteos por archivo de los que cruzaron por documento en dataframe DATA
@@ -32,6 +32,10 @@ write.csv(Archivos_Consulta_1, file =paste("Archivos_Consulta_1","_",format(Sys.
 
 Archivos_Consulta_2 = Consulta_2 %>% group_by(Archivo) %>% summarise(Total=n())
 write.csv(Archivos_Consulta_2, file =paste("Archivos_Consulta_2","_",format(Sys.time(), "%d%m%Y"),".csv", sep=""), row.names = FALSE)
+
+Archivos_Consulta_3 = Consulta_3 %>% group_by(Archivo) %>% summarise(Total=n())
+write.csv(Archivos_Consulta_3, file =paste("Archivos_Consulta_3","_",format(Sys.time(), "%d%m%Y"),".csv", sep=""), row.names = FALSE)
+
 
 # Conteos por archivo de los que cruzaron por documento en dataframe Consulta
 Archivos_Consulta = Consulta %>% group_by(Archivo) %>% summarise(Total=n())

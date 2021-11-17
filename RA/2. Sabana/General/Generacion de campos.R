@@ -1,4 +1,5 @@
 # Generación de campos
+Original$NA_Documento = ifelse(!is.na(Original$`NUMERO DOCUMENTO`),1,0)
 
 Original$Cruce = ifelse(Original$`NUMERO DOCUMENTO` %in% Precargue$E09,1,0)
 
@@ -11,3 +12,20 @@ Original$Duplicados_Logro = ifelse(duplicated(paste(Original$`NUMERO DOCUMENTO`,
 Original$Cruce_Oferta = ifelse(paste(Original$`ID OFERTA`, Original$`CODIGO MUNICIPIO DANE`) %in% paste(Oferta$`ID Oferta`, Oferta$`Cód Municipio`),1,0)
 
 Original$Cruce_Precargue = ifelse(paste(Original$`ID OFERTA`, Original$`CODIGO MUNICIPIO DANE`) %in% paste(Oferta$`ID Oferta`, Oferta$`Cód Municipio`),1,0)
+
+Original = merge(Original, Precargue[c("A01","IdIntegrante","E08","E09","E01_1","E01_2","E01_3","E01_4","A03_1")], by.x = c("NUMERO DOCUMENTO"), by.y = c("E09"), all.x = T)
+
+setwd("~/GitHub/GIT-DPS/Consultas")
+source("Limpiador de textos.R")
+
+Original$Nombres_RA = paste(Original$`PRIMER NOMBRE`, limpiador_texto(Original$`PRIMER APELLIDO`))
+Original$Nombres_PR = paste(Original$E01_1, Original$E01_3)
+
+Original$Dist_Nombres = mapply(adist, limpiador_texto(Original$Nombres_RA), limpiador_texto(Original$Nombres_PR))
+Original$Dist_Nombres_Porc = (Original$Dist_Nombres/nchar(Original$Nombres_RA))*100
+Original$Dist_Nombres_Dummy = ifelse(!Original$Dist_Nombres_Porc>=50,1,0)
+
+library("dplyr", lib.loc="~/R/R-3.6.3/library")
+#Se excluyen duplicados por numero de documento y ID conservando el valor con la menor proporción de diferencias de nombres
+Original = Original %>% group_by(`NUMERO DOCUMENTO`, ID) %>% slice(which.min(Dist_Nombres_Porc))
+
