@@ -112,5 +112,4 @@ patterns = c("ACTIVIDAD PRODUCTIVA", "AFILIACIÓN A SALUD", "EDUCACIÓN INICIAL"
 
 Original$List_Logros = ifelse(grepl(paste(patterns, collapse="|"), toupper(Original$`LOGRO y/o PRIVACIÓN GESTIONADA`)),1,0)
 
-
 tictoc::toc()
