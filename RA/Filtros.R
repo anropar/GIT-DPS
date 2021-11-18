@@ -1,4 +1,3 @@
-
 # Exportación
 Original$`FECHA DE NACIMIENTO` = gsub("/","-",format(as.Date(Original$`FECHA DE NACIMIENTO`),'%d/%m/%Y'))
 Original$`FECHA DE LA ATENCIÓN` = gsub("/","-",format(as.Date(Original$`FECHA DE LA ATENCIÓN`),'%d/%m/%Y'))
@@ -28,10 +27,9 @@ Consulta_5 = Original[Original$NA_Documento %in% 1 & Original$Cruce %in% 1 & Ori
 
 Consulta_6 = Consulta_2[!paste(Consulta_2$`ID OFERTA`, Consulta_2$`NUMERO DOCUMENTO`) %in% paste(Consulta_3$`ID OFERTA`, Consulta_3$`NUMERO DOCUMENTO`),]
 
-Consulta_7 = Consulta[Consulta$Cruce %in% 1 & Consulta$Duplicados_Logro %in% 1,]
+nrow(Consulta_5[!duplicated(Consulta_5$A01),])
 
-
-#Exportaciones
+# Exportaciones
 Campos = read_excel("~/GitHub/GIT-DPS/RA/1. Entradas/PlantillaRegistrosAdministrativos_20211008.xlsm", sheet = "Plantilla")
 Campos = names(Campos)
 Marcas = c("NA_Documento","Cruce","Dist_Nombres_Porc","Dist_Nombres_Dummy","Duplicados_Logro","List_Logros")
@@ -39,6 +37,8 @@ Marcas = c("NA_Documento","Cruce","Dist_Nombres_Porc","Dist_Nombres_Dummy","Dupl
 setwd(paste(Carpeta,"2. Sabana","Salidas", sep = slash))# Se define la carpeta donde se va a exportar el cálculo de LOGROS
 
 write.table(Original[c(Campos, Marcas)], file = paste("RA","_",format(Sys.time(), "%d%m%Y"),".txt", sep=""), sep = ";", row.names = FALSE, quote = F)
+# write.table(Consulta_5[c("A01","IdIntegrante", Campos, Marcas)], file = paste("RA","_",format(Sys.time(), "%d%m%Y"),".txt", sep=""), sep = ";", row.names = FALSE, quote = F)
+
 
 # write.table(Consulta_2[Campos], file = paste("Cargue_RA","_",format(Sys.time(), "%d%m%Y"),".txt", sep=""), sep = ";", row.names = FALSE, quote = F)
 # 
@@ -52,8 +52,7 @@ write.table(Original[c(Campos, Marcas)], file = paste("RA","_",format(Sys.time()
 # setwd(paste(Carpeta,"2. Sabana","Salidas", sep = slash))# Se define la carpeta donde se va a exportar el cálculo de LOGROS
 # write.table(Diferencia, file = paste("Segundo_Cargue_RA","_",format(Sys.time(), "%d%m%Y"),".txt", sep=""), sep = ";", row.names = FALSE, quote = F)
 # 
-# # Id hogares unicos
-# nrow(Consulta_3[!duplicated(Consulta_3$A01),])
+# Id hogares unicos
 # 
 # setwd(paste(Carpeta,"2. Sabana","Salidas", sep = slash))# Se define la carpeta donde se va a exportar el cálculo de LOGROS
 # write.table(Diferencia, file = paste("Segundo_Cargue_RA","_",format(Sys.time(), "%d%m%Y"),".txt", sep=""), sep = ";", row.names = FALSE, quote = F)
