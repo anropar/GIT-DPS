@@ -15,11 +15,11 @@ Original$`TIPO DOCUMENTO` = as.character(recode_factor(Original$`TIPO DOCUMENTO`
 # 3. Contener los logros definidos en la compilación patterns.
 
 # Consulta ####
-Consulta_1 = Original[Original$NA_Documento %in% 1 & (Original$`FECHA DE LA ATENCIÓN`)>="2020-01-01",]
-Consulta_2 = Original[Original$NA_Documento %in% 1 & (Original$`FECHA DE LA ATENCIÓN`)>="2020-01-01" & Original$Cruce %in% 1,]
-Consulta_3 = Original[Original$NA_Documento %in% 1 & (Original$`FECHA DE LA ATENCIÓN`)>="2020-01-01" & Original$Cruce %in% 1 & Original$Dist_Nombres_Dummy %in% 1,]
-Consulta_4 = Original[Original$NA_Documento %in% 1 & (Original$`FECHA DE LA ATENCIÓN`)>="2020-01-01" & Original$Cruce %in% 1 & Original$Dist_Nombres_Dummy %in% 1 & Original$Duplicados_Logro %in% 1 & Original$Cruce_Oferta %in% 1,]
-Consulta_5 = Original[Original$NA_Documento %in% 1 & (Original$`FECHA DE LA ATENCIÓN`)>="2020-01-01" & Original$Cruce %in% 1 & Original$Dist_Nombres_Dummy %in% 1 & Original$Duplicados_Logro %in% 1 & Original$Cruce_Oferta %in% 1 & Original$List_Logros %in% 1,]
+Consulta_1 = Original[Original$NA_Documento %in% 1 & (Original$`FECHA DE LA ATENCIÓN`)>="2021-01-01",] %>% drop_na("NUMERO DOCUMENTO")
+Consulta_2 = Original[Original$NA_Documento %in% 1 & (Original$`FECHA DE LA ATENCIÓN`)>="2021-01-01" & Original$Cruce %in% 1,] %>% drop_na("NUMERO DOCUMENTO")
+Consulta_3 = Original[Original$NA_Documento %in% 1 & (Original$`FECHA DE LA ATENCIÓN`)>="2021-01-01" & Original$Cruce %in% 1 & Original$Dist_Nombres_Dummy %in% 1,] %>% drop_na("NUMERO DOCUMENTO")
+Consulta_4 = Original[Original$NA_Documento %in% 1 & (Original$`FECHA DE LA ATENCIÓN`)>="2021-01-01" & Original$Cruce %in% 1 & Original$Dist_Nombres_Dummy %in% 1 & Original$Duplicados_Logro %in% 1 & Original$Cruce_Oferta %in% 1,] %>% drop_na("NUMERO DOCUMENTO")
+Consulta_5 = Original[Original$NA_Documento %in% 1 & (Original$`FECHA DE LA ATENCIÓN`)>="2021-01-01" & Original$Cruce %in% 1 & Original$Dist_Nombres_Dummy %in% 1 & Original$Duplicados_Logro %in% 1 & Original$Cruce_Oferta %in% 1 & Original$List_Logros %in% 1,] %>% drop_na("NUMERO DOCUMENTO")
 
 # Id hogar unicos de consulta 5
 nrow(Consulta_5[!duplicated(Consulta_5$A01),])
@@ -56,15 +56,21 @@ Entrega = "E1"
 setwd(paste(Carpeta,"2. Sabana","Salidas",Entrega, sep = slash))# Se define la carpeta donde se va a exportar el cálculo de LOGROS
 
 # Original con marcas
-write.table(Original[c(Campos, Marcas)], file = paste("RA_",Entrega,"_",format(Sys.time(), "%d%m%Y"),".txt", sep=""), sep = ";", row.names = FALSE, quote = F, na = "", fileEncoding = "ISO-8859-1")
+write.table(Original[c(Campos, Marcas,"A01","IdIntegrante")], file = paste("RA_",Entrega,"_",format(Sys.time(), "%d%m%Y"),".txt", sep=""), sep = ";", row.names = FALSE, quote = F, na = "", fileEncoding = "ISO-8859-1")
 
 # Consulta 5
-write.table(Consulta_5[Campos], file = paste("Consulta_5_",Entrega,"_",format(Sys.time(), "%d%m%Y"),".txt", sep=""), sep = ";", row.names = FALSE, quote = F, na = "", fileEncoding = "UTF-8")
+write.table(Consulta_5[c(Campos, Marcas,"A01","IdIntegrante")], file = paste("Consulta_5_",Entrega,"_",format(Sys.time(), "%d%m%Y"),".txt", sep=""), sep = ";", row.names = FALSE, quote = F, na = "", fileEncoding = "UTF-8")
 
 # Consulta 6
-write.table(Consulta_6[Campos], file = paste("Consulta_6_",Entrega,"_",format(Sys.time(), "%d%m%Y"),".txt", sep=""), sep = ";", row.names = FALSE, quote = F, na = "", fileEncoding = "ISO-8859-1")
+write.table(Consulta_6[c(Campos, Marcas,"A01","IdIntegrante")], file = paste("Consulta_6_",Entrega,"_",format(Sys.time(), "%d%m%Y"),".txt", sep=""), sep = ";", row.names = FALSE, quote = F, na = "", fileEncoding = "ISO-8859-1")
 
 # Archivos consulta
 write.csv(Archivos_Consulta, file = paste("Archivos_Consulta_",Entrega,"_",format(Sys.time(), "%d%m%Y"),".csv", sep=""), row.names = FALSE)
 # Archivos original
 write.csv(Archivos_Original, file = paste("Archivos_Original_",Entrega,"_",format(Sys.time(), "%d%m%Y"),".csv", sep=""), row.names = FALSE)
+
+
+# Consulta 2020
+write.table(Consulta_5_E1[year(Consulta_5_E1$`FECHA DE LA ATENCIÓN`) %in% "2020",], file = paste("Consulta_5_E1_","2020","_",format(Sys.time(), "%d%m%Y"),".txt", sep=""), sep = ";", row.names = FALSE, quote = F, na = "", fileEncoding = "ISO-8859-1")
+
+RA_E1_30112021 = RA_E1_30112021[RA_E1_30112021$NA_Documento %in% 1 & (RA_E1_30112021$`FECHA DE LA ATENCIÓN`)>="2021-01-01" & RA_E1_30112021$Cruce %in% 1 & RA_E1_30112021$Dist_Nombres_Dummy %in% 1 & RA_E1_30112021$Duplicados_Logro %in% 1 & RA_E1_30112021$Cruce_Oferta %in% 1 & RA_E1_30112021$List_Logros %in% 1,]
