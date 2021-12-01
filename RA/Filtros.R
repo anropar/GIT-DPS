@@ -1,6 +1,7 @@
 # Exportación
-Original$`FECHA DE NACIMIENTO` = gsub("/","-",format(as.Date(Original$`FECHA DE NACIMIENTO`),'%d/%m/%Y'))
-Original$`FECHA DE LA ATENCIÓN` = gsub("/","-",format(as.Date(Original$`FECHA DE LA ATENCIÓN`),'%d/%m/%Y'))
+Campos = read_excel("~/GitHub/GIT-DPS/RA/1. Entradas/PlantillaRegistrosAdministrativos_20211008.xlsm", sheet = "Plantilla")
+Campos = names(Campos)
+Marcas = c("NA_Documento","Cruce","Dist_Nombres_Porc","Dist_Nombres_Dummy","Duplicados_Logro","Cruce_Oferta","List_Logros")
 
 Original$`TIPO DOCUMENTO` = as.character(recode_factor(Original$`TIPO DOCUMENTO`, `1` = "Registro Civil",
                                                          `2` = "Tarjeta de Identidad", `3` = "Cédula de Ciudadanía",
@@ -13,54 +14,57 @@ Original$`TIPO DOCUMENTO` = as.character(recode_factor(Original$`TIPO DOCUMENTO`
 # 2. No estar duplicado por numero de documento y logro.
 # 3. Contener los logros definidos en la compilación patterns.
 
-
 # Consulta ####
-Consulta_1 = Original[Original$NA_Documento %in% 1,]
+Consulta_1 = Original[Original$NA_Documento %in% 1 & (Original$`FECHA DE LA ATENCIÓN`)>="2020-01-01",]
+Consulta_2 = Original[Original$NA_Documento %in% 1 & (Original$`FECHA DE LA ATENCIÓN`)>="2020-01-01" & Original$Cruce %in% 1,]
+Consulta_3 = Original[Original$NA_Documento %in% 1 & (Original$`FECHA DE LA ATENCIÓN`)>="2020-01-01" & Original$Cruce %in% 1 & Original$Dist_Nombres_Dummy %in% 1,]
+Consulta_4 = Original[Original$NA_Documento %in% 1 & (Original$`FECHA DE LA ATENCIÓN`)>="2020-01-01" & Original$Cruce %in% 1 & Original$Dist_Nombres_Dummy %in% 1 & Original$Duplicados_Logro %in% 1 & Original$Cruce_Oferta %in% 1,]
+Consulta_5 = Original[Original$NA_Documento %in% 1 & (Original$`FECHA DE LA ATENCIÓN`)>="2020-01-01" & Original$Cruce %in% 1 & Original$Dist_Nombres_Dummy %in% 1 & Original$Duplicados_Logro %in% 1 & Original$Cruce_Oferta %in% 1 & Original$List_Logros %in% 1,]
 
-Consulta_2 = Original[Original$NA_Documento %in% 1 & Original$Cruce %in% 1,]
-
-Consulta_3 = Original[Original$NA_Documento %in% 1 & Original$Cruce %in% 1 & Original$Dist_Nombres_Dummy %in% 1,]
-
-Consulta_4 = Original[Original$NA_Documento %in% 1 & Original$Cruce %in% 1 & Original$Dist_Nombres_Dummy %in% 1 & Original$Duplicados_Logro %in% 1,]
-
-Consulta_5 = Original[Original$NA_Documento %in% 1 & Original$Cruce %in% 1 & Original$Dist_Nombres_Dummy %in% 1 & Original$Duplicados_Logro %in% 1 & Original$List_Logros %in% 1,]
-
-Consulta_6 = Consulta_2[!paste(Consulta_2$`ID OFERTA`, Consulta_2$`NUMERO DOCUMENTO`) %in% paste(Consulta_3$`ID OFERTA`, Consulta_3$`NUMERO DOCUMENTO`),]
-
+# Id hogar unicos de consulta 5
 nrow(Consulta_5[!duplicated(Consulta_5$A01),])
 
+#
+# Consulta_5_P1 = read_delim("~/GitHub/GIT-DPS/RA/2. Sabana/Salidas/E1/Consulta_5_E1_30112021.txt", ";", escape_double = FALSE, trim_ws = TRUE)
+# 
+# Consulta_5$ACTIVIDAD_PRODUCTIVA = ifelse(grepl("ACTIVIDAD PRODUCTIVA", toupper(Consulta_5$`LOGRO y/o PRIVACIÓN GESTIONADA`)),1,0)
+# Consulta_5_P1$ACTIVIDAD_PRODUCTIVA = ifelse(grepl("ACTIVIDAD PRODUCTIVA", toupper(Consulta_5_P1$`LOGRO y/o PRIVACIÓN GESTIONADA`)),1,0)
+# 
+# Consulta_5[Consulta_5$ACTIVIDAD_PRODUCTIVA %in% 1,]
+# Consulta_5_P1[Consulta_5_P1$ACTIVIDAD_PRODUCTIVA %in% 1,]
+# 
+# Prueba = merge(Consulta_5[Consulta_5$ACTIVIDAD_PRODUCTIVA %in% 1,], Consulta_5_P1[Consulta_5_P1$ACTIVIDAD_PRODUCTIVA %in% 1,], by=c("NUMERO DOCUMENTO", "ESTADO ACCESO A OFERTA"), all.x=T)
+# 
+# Consulta_5$Reportado = ifelse(Consulta_5[Consulta_5$ACTIVIDAD_PRODUCTIVA %in% 1,]$`NUMERO DOCUMENTO` %in% 
+#                               Consulta_5_P1[Consulta_5_P1$ACTIVIDAD_PRODUCTIVA %in% 1,]$`NUMERO DOCUMENTO` &
+#                               (as.character(Consulta_5$`ESTADO ACCESO A OFERTA`) %in% as.character(Consulta_5_P1$`ESTADO ACCESO A OFERTA`)),1,0)
+# 
+# Consulta_6 = Consulta_5[Consulta_5$Reportado %in% 0,]
+# 
+# Consulta_6$`FECHA DE NACIMIENTO` = gsub("/","-",format(as.Date(Consulta_6$`FECHA DE NACIMIENTO`),'%d/%m/%Y'))
+# Consulta_6$`FECHA DE LA ATENCIÓN` = gsub("/","-",format(as.Date(Consulta_6$`FECHA DE LA ATENCIÓN`),'%d/%m/%Y'))
+
+setwd(Carpeta)
+source("Consultas.R")
+
+
+Consulta_5 = Consulta_5 %>% drop_na(`NUMERO DOCUMENTO`) %>% arrange(`ID OFERTA`)
+
+Entrega = "E1"
+
 # Exportaciones
-Campos = read_excel("~/GitHub/GIT-DPS/RA/1. Entradas/PlantillaRegistrosAdministrativos_20211008.xlsm", sheet = "Plantilla")
-Campos = names(Campos)
-Marcas = c("NA_Documento","Cruce","Dist_Nombres_Porc","Dist_Nombres_Dummy","Duplicados_Logro","List_Logros")
+setwd(paste(Carpeta,"2. Sabana","Salidas",Entrega, sep = slash))# Se define la carpeta donde se va a exportar el cálculo de LOGROS
 
-setwd(paste(Carpeta,"2. Sabana","Salidas", sep = slash))# Se define la carpeta donde se va a exportar el cálculo de LOGROS
+# Original con marcas
+write.table(Original[c(Campos, Marcas)], file = paste("RA_",Entrega,"_",format(Sys.time(), "%d%m%Y"),".txt", sep=""), sep = ";", row.names = FALSE, quote = F, na = "", fileEncoding = "ISO-8859-1")
 
-write.table(Original[c(Campos, Marcas)], file = paste("RA","_",format(Sys.time(), "%d%m%Y"),".txt", sep=""), sep = ";", row.names = FALSE, quote = F)
-# write.table(Consulta_5[c("A01","IdIntegrante", Campos, Marcas)], file = paste("RA","_",format(Sys.time(), "%d%m%Y"),".txt", sep=""), sep = ";", row.names = FALSE, quote = F)
+# Consulta 5
+write.table(Consulta_5[Campos], file = paste("Consulta_5_",Entrega,"_",format(Sys.time(), "%d%m%Y"),".txt", sep=""), sep = ";", row.names = FALSE, quote = F, na = "", fileEncoding = "UTF-8")
 
+# Consulta 6
+write.table(Consulta_6[Campos], file = paste("Consulta_6_",Entrega,"_",format(Sys.time(), "%d%m%Y"),".txt", sep=""), sep = ";", row.names = FALSE, quote = F, na = "", fileEncoding = "ISO-8859-1")
 
-# write.table(Consulta_2[Campos], file = paste("Cargue_RA","_",format(Sys.time(), "%d%m%Y"),".txt", sep=""), sep = ";", row.names = FALSE, quote = F)
-# 
-# Cargue_RA_12112021 = Cargue_RA_12112021[-1]
-# 
-# setnames(Cargue_RA_12112021, old = names(Cargue_RA_12112021), new = Campos)
-# 
-# Diferencia = Cargue_RA_16112021[!paste(Cargue_RA_16112021$`ID OFERTA`, Cargue_RA_16112021$`NUMERO DOCUMENTO`) %in%
-#                                 paste(Cargue_RA_12112021$`ID OFERTA`, Cargue_RA_12112021$`NUMERO DOCUMENTO`),]
-# 
-# setwd(paste(Carpeta,"2. Sabana","Salidas", sep = slash))# Se define la carpeta donde se va a exportar el cálculo de LOGROS
-# write.table(Diferencia, file = paste("Segundo_Cargue_RA","_",format(Sys.time(), "%d%m%Y"),".txt", sep=""), sep = ";", row.names = FALSE, quote = F)
-# 
-# Id hogares unicos
-# 
-# setwd(paste(Carpeta,"2. Sabana","Salidas", sep = slash))# Se define la carpeta donde se va a exportar el cálculo de LOGROS
-# write.table(Diferencia, file = paste("Segundo_Cargue_RA","_",format(Sys.time(), "%d%m%Y"),".txt", sep=""), sep = ";", row.names = FALSE, quote = F)
-# 
-# # Diferencias de cargue
-# setwd(paste(Carpeta,"2. Sabana","Salidas", sep = slash))# Se define la carpeta donde se va a exportar el cálculo de LOGROS
-# 
-# Cargue_RA_12112021 <- read_delim("Cargue_RA_12112021.txt", ";", escape_double = FALSE, locale = locale(encoding = "ISO-8859-1"), trim_ws = TRUE)
-# Campos = names(Cargue_RA_12112021)
-# 
-# 
+# Archivos consulta
+write.csv(Archivos_Consulta, file = paste("Archivos_Consulta_",Entrega,"_",format(Sys.time(), "%d%m%Y"),".csv", sep=""), row.names = FALSE)
+# Archivos original
+write.csv(Archivos_Original, file = paste("Archivos_Original_",Entrega,"_",format(Sys.time(), "%d%m%Y"),".csv", sep=""), row.names = FALSE)

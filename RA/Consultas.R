@@ -7,51 +7,31 @@ Variables = c("ID OFERTA","TIPO DOCUMENTO","NUMERO DOCUMENTO","PRIMER NOMBRE","S
 Consulta = Consulta[c("Group.1",Variables)]
 setnames(Consulta, old = "Group.1", new = "Archivo")
 
-setwd(paste(Carpeta,"2. Sabana","Salidas", sep = slash))# Se define la carpeta donde se va a exportar el cálculo de LOGROS
-write.csv(Consulta, file =paste("NA","_",format(Sys.time(), "%d%m%Y"),".csv", sep=""), row.names = FALSE)
+Archivos_Original = Original %>% group_by(Archivo) %>% summarise(Total=n())
+
+Archivos_Original =Reduce(function(x,y) merge(x = x, y = y, by = c("Archivo"), all.x=TRUE), list(Consulta,
+                                                                                                 Archivos_Original))#Unión de datos de hogares
+
 
 # Conteos por archivo dataframe Original
-Archivos_Original = Original %>% group_by(Archivo) %>% summarise(Total=n())
-write.csv(Archivos_Original, file =paste("Archivos_Original","_",format(Sys.time(), "%d%m%Y"),".csv", sep=""), row.names = FALSE)
-
-# Conteos por archivo dataframe DATA
-Archivos_DATA = DATA %>% group_by(Archivo) %>% summarise(Total=n())
-write.csv(Archivos_DATA, file =paste("Archivos_DATA","_",format(Sys.time(), "%d%m%Y"),".csv", sep=""), row.names = FALSE)
-
-# Conteos por archivo de los que cruzaron por documento en dataframe DATA
-Archivos_Cruce = DATA %>% group_by(Archivo) %>% summarise(Total=sum(Cruce, na.rm = T))
-write.csv(Archivos_Cruce, file =paste("Archivos_Cruce","_",format(Sys.time(), "%d%m%Y"),".csv", sep=""), row.names = FALSE)
-
-# Conteos por archivo de los que cruzaron por documento en dataframe DATA
-Archivos_Cruce_TIPO_DOCUMENTO = DATA %>% group_by(Archivo) %>% summarise(Total=sum(Cruce_TIPO_NUMERO, na.rm = T))
-write.csv(Archivos_Cruce_TIPO_DOCUMENTO, file =paste("Archivos_Cruce_TIPO_DOCUMENTO","_",format(Sys.time(), "%d%m%Y"),".csv", sep=""), row.names = FALSE)
+library("dplyr", lib.loc="~/R/R-3.6.3/library")
+library("tidyr", lib.loc="~/R/R-3.6.3/library")
 
 # Conteos por archivo de los que cruzaron por documento en dataframe Consulta
-Archivos_Consulta_1 = Consulta_1 %>% group_by(Archivo) %>% summarise(Total=n())
-write.csv(Archivos_Consulta_1, file =paste("Archivos_Consulta_1","_",format(Sys.time(), "%d%m%Y"),".csv", sep=""), row.names = FALSE)
-
-Archivos_Consulta_2 = Consulta_2 %>% group_by(Archivo) %>% summarise(Total=n())
-write.csv(Archivos_Consulta_2, file =paste("Archivos_Consulta_2","_",format(Sys.time(), "%d%m%Y"),".csv", sep=""), row.names = FALSE)
-
-Archivos_Consulta_3 = Consulta_3 %>% group_by(Archivo) %>% summarise(Total=n())
-write.csv(Archivos_Consulta_3, file =paste("Archivos_Consulta_3","_",format(Sys.time(), "%d%m%Y"),".csv", sep=""), row.names = FALSE)
+Archivos_Consulta_1 = Consulta_1 %>% group_by(Archivo) %>% summarise(Consulta_1=n())
+Archivos_Consulta_2 = Consulta_2 %>% group_by(Archivo) %>% summarise(Consulta_2=n())
+Archivos_Consulta_3 = Consulta_3 %>% group_by(Archivo) %>% summarise(Consulta_3=n())
+Archivos_Consulta_4 = Consulta_4 %>% group_by(Archivo) %>% summarise(Consulta_4=n())
+Archivos_Consulta_5 = Consulta_5 %>% group_by(Archivo) %>% summarise(Consulta_5=n())
+Archivos_Consulta_6 = Consulta_6 %>% group_by(Archivo) %>% summarise(Consulta_6=n())
 
 
-# Conteos por archivo de los que cruzaron por documento en dataframe Consulta
-Archivos_Consulta = Consulta %>% group_by(Archivo) %>% summarise(Total=n())
-write.csv(Archivos_Consulta, file =paste("Archivos_Consulta","_",format(Sys.time(), "%d%m%Y"),".csv", sep=""), row.names = FALSE)
-
-# Conteos por archivo de los que cruzaron por documento y oferta en dataframe Consulta
-Archivos_Cruce_Logros = Consulta %>% group_by(Archivo) %>% summarise(Total=sum(Cruce, na.rm = T))
-write.csv(Archivos_Cruce_Logros, file =paste("Archivos_Cruce_Logros","_",format(Sys.time(), "%d%m%Y"),".csv", sep=""), row.names = FALSE)
-
-# Conteos por archivo de los que cruzaron por documento, logros y oferta
-Archivos_Cruce_Logros_Oferta = Consulta %>% group_by(Archivo) %>% summarise(Total=sum(Cruce, na.rm = T))
-write.csv(Archivos_Cruce_Logros_Oferta, file =paste("Archivos_Cruce_Logros_Oferta","_",format(Sys.time(), "%d%m%Y"),".csv", sep=""), row.names = FALSE)
+Archivos_Consulta =Reduce(function(x,y) merge(x = x, y = y, by = c("Archivo"), all.x=TRUE), list(Archivos_Consulta_1,
+                                                                                                 Archivos_Consulta_2,
+                                                                                                 Archivos_Consulta_3,
+                                                                                                 Archivos_Consulta_4,
+                                                                                                 Archivos_Consulta_5,
+                                                                                                 Archivos_Consulta_6))#Unión de datos de hogares
 
 
-write.csv(Consulta_3, file =paste("Diferencia_2","_",format(Sys.time(), "%d%m%Y"),".csv", sep=""), row.names = FALSE)
-
-# DATA = merge(DATA, Precargue[c("A01","IdIntegrante","E09","E01_1","E01_2","E01_3","E01_4","A03_1")], by.x = c("NUMERO DOCUMENTO","CODIGO MUNICIPIO DANE"), by.y = c("E09","A03_1"), all.x = T)
-# Duplicados_DATA = Precargue[duplicated(Precargue$E09) | duplicated(Precargue$E09,fromLast = T),]
-# Consulta$Cruce_duplicado = ifelse(paste(Consulta$`NUMERO DOCUMENTO`, Consulta$`CODIGO MUNICIPIO DANE`) %in% paste(Duplicados_Precargue$, Duplicados_Precargue$A03_1),1,0)
+rm(list = ls()[ls() %in% grep("^Archivos_Consulta_",ls(),value = TRUE)])
