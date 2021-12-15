@@ -1,5 +1,5 @@
 # Exportación
-Campos = read_excel("~/GitHub/GIT-DPS/RA/1. Entradas/PlantillaRegistrosAdministrativos_20211008.xlsm", sheet = "Plantilla")
+Campos = read_excel(paste(Entradas,"PlantillaRegistrosAdministrativos_20211008.xlsm", sep = slash), sheet = "Plantilla")
 Campos = names(Campos)
 Marcas = c("NA_Documento","Cruce","Dist_Nombres_Porc","Dist_Nombres_Dummy","Duplicados_Logro","Cruce_Oferta","List_Logros")
 

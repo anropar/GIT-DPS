@@ -12,9 +12,6 @@ Original$Cruce_Oferta = ifelse(paste(Original$`ID OFERTA`, Original$`CODIGO MUNI
 
 Original = merge(Original, Precargue[c("A01","IdIntegrante","A02","A02_1","A03","A03_1","E02","E03","E08","E09","E01_1","E01_2","E01_3","E01_4")], by.x = c("NUMERO DOCUMENTO"), by.y = c("E09"), all.x = T)
 
-source(paste(Carpeta,"Consultas", sep = slash), encoding = "UTF-8")
-source("Limpiador de textos.R")
-
 Original$Nombres_RA = paste(Original$`PRIMER NOMBRE`, limpiador_texto(Original$`PRIMER APELLIDO`))
 Original$Nombres_PR = paste(Original$E01_1, Original$E01_3)
 
