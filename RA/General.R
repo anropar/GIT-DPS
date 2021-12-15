@@ -32,72 +32,77 @@ source("Librerias.R", encoding = "UTF-8")# Las librerias que se usaran
 setwd(Carpeta)
 source("Importacion de datos.R", encoding = "UTF-8")
 
-###############
-# 1.1 MUESTRA #
-###############
-# Si desea realizar los cálculos y validaciones inicialmente con una muestre habilite las siguientes lineas de código
+#############
+# 2. Consultas #
+#############
+setwd(Carpeta)
+source("Filtros.R", encoding = "UTF-8")
 
-# porcentaje = 0.001# Porcentaje de la muestra
-# 
-# setwd(Carpeta)
-# source("Muestra.R", encoding = "UTF-8")
-
-##########
-#Formatos#
-##########
-# setwd(paste(Carpeta,"2. Sabana","Version", sep = slash))
-# source("Formatos.R")# Contiene las variables definidas en el diccionario de datos correspondiente
-
-###########################
-# 2. Etapas de validaciOn #
-###########################
-
-# Crea carpeta de salida de resultados de la validación
-setwd(paste(paste(Carpeta,"2. Sabana", sep = slash),"Salidas", sep = slash))
-dir.create(paste0("Validacion_",Fecha), showWarnings = FALSE)#Crea una nueva carpeta
-
-# ValidaciOn de la primera etapa - Nombres de los campos
-setwd(paste(Carpeta,"2. Sabana", sep = slash))
-source("E1.R")
-
-
-# # Se cambian los nombres de los campos para poder avanzar en la validacion
-# setwd(paste(Carpeta,"2. Sabana", sep = slash))
-# source("Simulacion_OTI.R")
-
-# Validacion de la segunda etapa - Valores admisibles
-setwd(paste(Carpeta,"2. Sabana", sep = slash))
-source("E2.R", encoding = "UTF-8")
-
-# Validacion de la tercera etapa - Flujos de los datos
-setwd(paste(Carpeta,"2. Sabana", sep = slash))
-source("E3.R")
-
-################################
-# 6. Estadasticas descriptivas #
-################################
-
-view(dfSummary(as.data.frame(DATA)))# Estadística descriptiva del cálculo de DATA
-view(dfSummary(as.data.frame(Consulta)))# Estadística descriptiva del cálculo de DATA
-view(dfSummary(as.data.frame(Segundo_Cargue_09112021)))# Estadística descriptiva del cálculo de DATA
+setwd(Carpeta)
+source("Consultas.R", encoding = "UTF-8")
 
 #####################
 # 7. Exportaciones  #
 #####################
-# Exportación de los Registros Administrativos
-setwd(paste(Carpeta,"2. Sabana","Salidas", sep = slash))# Se define la carpeta donde se va a exportar el cálculo de LOGROS
+Entrega = "E1"
 
-write.csv(DATA, file =paste("RA_V1","_",format(Sys.time(), "%d%m%Y"),".csv", sep=""), row.names = FALSE)
-write.csv(DATA %>% select(-c("A01","IdIntegrante")), file =paste("RA_V2","_",format(Sys.time(), "%d%m%Y"),".csv", sep=""), row.names = FALSE)
-write.csv(Segundo_Cargue_09112021[!Segundo_Cargue_09112021$`NUMERO DOCUMENTO` %in% Prueba$`NUMERO DOCUMENTO`,], file =paste("Diferencia_Tercer_Filtro","_",format(Sys.time(), "%d%m%Y"),".csv", sep=""), row.names = FALSE)
+# Exportaciones
+setwd(paste(Carpeta,"2. Sabana","Salidas",Entrega, sep = slash))# Se define la carpeta donde se va a exportar el cálculo de LOGROS
 
-write.csv(Consulta[1:round((nrow(Consulta)/6),0),] %>% select(-c("Archivo","Cruce","Duplicados","Duplicados_Logro","Cruce_Oferta")), file =paste("Segundo_Cargue_1","_",format(Sys.time(), "%d%m%Y"),".csv", sep=""), row.names = FALSE)
-write.csv(Consulta[round((nrow(Consulta)/6),0):round((nrow(Consulta)/5),0),] %>% select(-c("Archivo","Cruce","Duplicados","Duplicados_Logro","Cruce_Oferta")), file =paste("Segundo_Cargue_2","_",format(Sys.time(), "%d%m%Y"),".csv", sep=""), row.names = FALSE)
-write.csv(Consulta[round((nrow(Consulta)/5),0):round((nrow(Consulta)/4),0),] %>% select(-c("Archivo","Cruce","Duplicados","Duplicados_Logro","Cruce_Oferta")), file =paste("Segundo_Cargue_3","_",format(Sys.time(), "%d%m%Y"),".csv", sep=""), row.names = FALSE)
-write.csv(Consulta[round((nrow(Consulta)/4),0):round((nrow(Consulta)/3),0),] %>% select(-c("Archivo","Cruce","Duplicados","Duplicados_Logro","Cruce_Oferta")), file =paste("Segundo_Cargue_4","_",format(Sys.time(), "%d%m%Y"),".csv", sep=""), row.names = FALSE)
-write.csv(Consulta[round((nrow(Consulta)/3),0):round((nrow(Consulta)/2),0),] %>% select(-c("Archivo","Cruce","Duplicados","Duplicados_Logro","Cruce_Oferta")), file =paste("Segundo_Cargue_5","_",format(Sys.time(), "%d%m%Y"),".csv", sep=""), row.names = FALSE)
-write.csv(Consulta[round((nrow(Consulta)/2),0):round((nrow(Consulta)),0),] %>% select(-c("Archivo","Cruce","Duplicados","Duplicados_Logro","Cruce_Oferta")), file =paste("Segundo_Cargue_6","_",format(Sys.time(), "%d%m%Y"),".csv", sep=""), row.names = FALSE)
+# Original con marcas
+Original$Exitosos = ifelse(!(Original$NA_Documento %in% 1 & (Original$`FECHA DE LA ATENCIÓN`)>="2021-01-01" & Original$Cruce %in% 1 & Original$Dist_Nombres_Dummy %in% 1 & Original$Duplicados_Logro %in% 1 & Original$Cruce_Oferta %in% 1 & Original$List_Logros %in% 1),1,0)
+Original$Entrega = Entrega
 
-write.csv(Consulta %>% select(-c("Archivo","Cruce","Duplicados","Duplicados_Logro","Cruce_Oferta")), file =paste("Segundo_Cargue","_",format(Sys.time(), "%d%m%Y"),".csv", sep=""), row.names = FALSE)
+Prueba = merge(Original, ReporteAdministrativos[c("ID Oferta","Id_Persona","ID Registro Administrativo")], by.x = c("ID OFERTA","IdIntegrante"), by.y = c("ID Oferta","Id_Persona"), all.x = T)
+setnames(Prueba, old = c("ID OFERTA","ID Registro Administrativo"), new = c("ID_OFERTA","ID_Registro_Administrativo"))
 
-write.csv(as.data.frame(table(Consulta$Archivo)), file =paste("RA_Archivos_Documento","_",format(Sys.time(), "%d%m%Y"),".csv", sep=""), row.names = FALSE)
+Prueba =  Prueba[!is.na(Prueba$ID_Registro_Administrativo),] %>% group_by(ID_OFERTA, IdIntegrante) %>%
+                          mutate(lab = toString(ID_Registro_Administrativo)) %>%
+                          as.data.frame()
+
+Prueba = Prueba[!duplicated(Prueba$lab),]
+
+write.table(Original[c(Campos, Marcas,"A01","IdIntegrante","Exitosos","Entrega")], file = paste("RA_",Entrega,"_",format(Sys.time(), "%d%m%Y"),".txt", sep=""), sep = ";", row.names = FALSE, quote = F, na = "", fileEncoding = "ISO-8859-1")
+
+# Consulta 5
+write.table(Consulta_5[Campos], file = paste("Consulta_5_OTI_",Entrega,"_",format(Sys.time(), "%d%m%Y"),".txt", sep=""), sep = ";", row.names = FALSE, quote = F, na = "", fileEncoding = "UTF-8")
+write.table(Consulta_5[c(Campos,"A01","IdIntegrante")], file = paste("Consulta_5_",Entrega,"_",format(Sys.time(), "%d%m%Y"),".txt", sep=""), sep = ";", row.names = FALSE, quote = F, na = "", fileEncoding = "UTF-8")
+
+# Consulta 6
+write.table(Consulta_6[c(Campos, Marcas,"A01","IdIntegrante")], file = paste("Consulta_6_",Entrega,"_",format(Sys.time(), "%d%m%Y"),".txt", sep=""), sep = ";", row.names = FALSE, quote = F, na = "", fileEncoding = "ISO-8859-1")
+
+# Archivos consulta
+write.csv(Archivos_Consulta, file = paste("Archivos_Consulta_",Entrega,"_",format(Sys.time(), "%d%m%Y"),".csv", sep=""), row.names = FALSE)
+# Archivos original
+write.csv(Archivos_Original, file = paste("Archivos_Original_",Entrega,"_",format(Sys.time(), "%d%m%Y"),".csv", sep=""), row.names = FALSE)
+
+# Consulta 2020
+write.table(Consulta_5_E1[year(Consulta_5_E1$`FECHA DE LA ATENCIÓN`) %in% "2020",], file = paste("Consulta_5_E1_","2020","_",format(Sys.time(), "%d%m%Y"),".txt", sep=""), sep = ";", row.names = FALSE, quote = F, na = "", fileEncoding = "ISO-8859-1")
+RA_E1_30112021 = RA_E1_30112021[RA_E1_30112021$NA_Documento %in% 1 & (RA_E1_30112021$`FECHA DE LA ATENCIÓN`)>="2021-01-01" & RA_E1_30112021$Cruce %in% 1 & RA_E1_30112021$Dist_Nombres_Dummy %in% 1 & RA_E1_30112021$Duplicados_Logro %in% 1 & RA_E1_30112021$Cruce_Oferta %in% 1 & RA_E1_30112021$List_Logros %in% 1,]
+Data_2020=Original[Original$NA_Documento %in% 1 & !(Original$`FECHA DE LA ATENCIÓN`)>="2021-01-01" & Original$Cruce %in% 1 & Original$Dist_Nombres_Dummy %in% 1 & Original$Duplicados_Logro %in% 1 & Original$Cruce_Oferta %in% 1 & Original$List_Logros %in% 1,] %>% drop_na("NUMERO DOCUMENTO")
+
+#############
+# 2. Marcas #
+#############
+DATA = Precargue
+
+setwd(Carpeta)
+source("Perfiles.R", encoding = "UTF-8")
+source("Ciclo vital.R", encoding = "UTF-8")
+source("Mujer jefe.R", encoding = "UTF-8")
+
+DATA = Perfiles(DATA, A01, E02_1)# Genera la columna de perfil del hogar
+DATA = Ciclo(DATA, E02_1)# Genera la columna de ciclo vital
+DATA = Mujer_jefe(DATA, E03, E14)# Genera la columna de ciclo vital
+
+###############
+# 3. Victimas #
+###############
+setwd(Carpeta)
+source("Victimas.R", encoding = "UTF-8")# Genera las marcas de victimas
+
+###############################
+# 10. Frecuencias municipales #
+###############################
+setwd(Carpeta)
+source("Frecuencias municipales.R", encoding = "UTF-8")# Genera el archivo de frecuencias municipales

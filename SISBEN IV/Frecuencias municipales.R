@@ -6,9 +6,19 @@
 ###########################
 setwd(Entradas)
 
-Unidos_IPM_20211022 <- read_delim("Unidos_IPM_20211022.txt","|", escape_double = FALSE, trim_ws = TRUE)
+BaseGestion_2021 = read_delim("BaseGestion Hogares Acompañados 2021.txt", ";", escape_double = FALSE, locale = locale(encoding = "ISO-8859-1"), trim_ws = TRUE)
+ 
+# LOGROS_HOG = read_delim("Unidos_Logros_Hogar_20211203.txt", 
+#                          "|", escape_double = FALSE, locale = locale(encoding = "ISO-8859-1"), 
+#                          trim_ws = TRUE)
+# 
+# LOGROS_INT = read_delim("Unidos_Logros_Integrante_20211203.txt", 
+#                          "|", escape_double = FALSE, locale = locale(encoding = "ISO-8859-1"), 
+#                          trim_ws = TRUE)
 
-DATA = merge(DATA, Unidos_IPM_20211022[c("idHogar","denominacionIPM")], by.x = "A01", by.y = "idHogar")
+DATA = DATA[DATA$IdIntegrante %in% BaseGestion_2021$idIntegranteHogar,]
+DATA = merge(DATA, BaseGestion_2021[c("idIntegranteHogar","denominacionIPM","EstadoHogar")], by.x = "IdIntegrante", by.y = "idIntegranteHogar")
+
 ##########
 #HOGARES
 ##########
@@ -16,6 +26,8 @@ PERFILES = reshape2::dcast(data=DATA[!duplicated(DATA$A01), c("A03_1","PERFIL_HO
                             A03_1 ~ PERFIL_HOG,
                             fun.aggregate = length,
                             value.var = "PERFIL_HOG")#Genera frecuencias en columnas de la variable definida
+
+setnames(PERFILES, old = c("AFIANZAMIENTO") , new = c("PRODUCTIVO"))
 
 D01 = reshape2::dcast(data=DATA[!duplicated(DATA$A01), c("A03_1","D01")],
                        A03_1 ~ D01,
@@ -39,31 +51,42 @@ ZONA = reshape2::dcast(data=DATA[!duplicated(DATA$A01), c("A03_1","A04")],
 
 setnames(ZONA, old = c("1","2","3") , new = c("Cabecera Municipal","Centro Poblado","Rural Disperso"))
 
-IPM = reshape2::dcast(data=DATA[!duplicated(DATA$A01), c("A03_1","denominacionIPM")],
-                       A03_1 ~ denominacionIPM,
+ESTADO = reshape2::dcast(data=DATA[!duplicated(DATA$A01), c("A03_1","EstadoHogar")],
+                        A03_1 ~ EstadoHogar,
                        fun.aggregate = length,
-                       value.var = "denominacionIPM")#Genera frecuencias en columnas de la variable definida
+                       value.var = "EstadoHogar")#Genera frecuencias en columnas de la variable definida
+
+# 
+# LP = reshape2::dcast(data=DATA[!duplicated(DATA$A01), c("A03_1","denominacionLP")],
+#                        A03_1 ~ denominacionLP,
+#                        fun.aggregate = length,
+#                        value.var = "denominacionLP")#Genera frecuencias en columnas de la variable definida
+# 
+# setnames(LP, old = c("1","2","3") , new = c("NO_POBRE_LP","POBRE_LP","POBRE_EXTREMO_LP"))
+
+IPM = reshape2::dcast(data=DATA[!duplicated(DATA$A01), c("A03_1","denominacionIPM")],
+                      A03_1 ~ denominacionIPM,
+                      fun.aggregate = length,
+                      value.var = "denominacionIPM")#Genera frecuencias en columnas de la variable definida
 
 setnames(IPM, old = c("NO POBRE","POBRE","NO DETERMINADO") , new = c("NO_POBRE_IPM","POBRE_IPM","NO_DETERMINADO_IPM"))
 
-LP = reshape2::dcast(data=DATA[!duplicated(DATA$A01), c("A03_1","denominacionLP")],
-                       A03_1 ~ denominacionLP,
-                       fun.aggregate = length,
-                       value.var = "denominacionLP")#Genera frecuencias en columnas de la variable definida
+VICTIMA= reshape2::dcast(data=DATA[DATA$VICTIMA==1 & !duplicated(DATA$A01),],
+                         A03_1 ~ VICTIMA,
+                         fun.aggregate = length,
+                         value.var = "VICTIMA")#Reshape2
 
-setnames(LP, old = c("1","2","3") , new = c("NO_POBRE_LP","POBRE_LP","POBRE_EXTREMO_LP"))
-
+colnames(VICTIMA)[2]="VICTIMA"
 
 #############
 #INTEGRANTES#
 #############
-DATA$Discapacidad <- +(apply(DATA[grep("F01", names(DATA), value = T)[-8]] == 1, 1, any))
+DATA$Discapacidad = +(apply(DATA[grep("F01", names(DATA), value = T)[-8]] == 1, 1, any))
 
 DISCAPACIDAD = DATA %>% group_by(A03_1) %>% summarise(Discapacidad=sum(Discapacidad,na.rm = T))
 
 INTEGRANTES = DATA %>% group_by(A03_1) %>% summarise(Totalhogares=n_distinct(A01),
                                                      Totalintegrantes=n())
-
 
 SEXO= reshape2::dcast(data=DATA[c("A03_1","E03")],
                       A03_1 ~ E03,
@@ -72,69 +95,95 @@ SEXO= reshape2::dcast(data=DATA[c("A03_1","E03")],
 
 setnames(SEXO, old = c("1","2") , new = c("Hombre","Mujer"))
 
+PIRAMIDES = reshape2::dcast(data=DATA[c("A03_1","CICLOVITAL")],
+                           A03_1 ~ CICLOVITAL,
+                           fun.aggregate = length,
+                           value.var = "CICLOVITAL")
+
+# setnames(PIRAMIDES, old = c("NA") , new = c("Sin información_PIRAMIDES"))
+
+MUJERJEFE= reshape2::dcast(data=DATA[DATA$Mujer_jefe==1,],
+                           A03_1 ~ Mujer_jefe,
+                           fun.aggregate = length,
+                           value.var = "Mujer_jefe")#Reshape2
+
+MUJERJEFE=MUJERJEFE[c(-3)]
+colnames(MUJERJEFE)[2]="Mujerjefe"
+
 ##################
 # Unión de datos #
 ##################
-DATA_Municipal_HOG=Reduce(function(x,y) merge(x = x, y = y, by = c("A03_1"), all.x=TRUE), list(B01,D01,ZONA,DISCAPACIDAD,INTEGRANTES,PERFILES,SEXO))#Se unen los dataframe de frecuencias de individuos.
 
-
-DATA=merge(DATA_HOG,DATA_PER[c(-2,-3,-4)], by="COD_MUNICIPIO")
-
-DATA$COD_DEPARTAMENTO=ifelse(nchar(as.character(DATA$COD_DEPARTAMENTO))==2, as.character(DATA$COD_DEPARTAMENTO), paste("0", as.character(DATA$COD_DEPARTAMENTO), sep=""))
-DATA$COD_MUNICIPIO=ifelse(nchar(as.character(DATA$COD_MUNICIPIO))==5, as.character(DATA$COD_MUNICIPIO), paste("0", as.character(DATA$COD_MUNICIPIO), sep=""))
-DATA=DATA[-2]
+DATA_Municipal_HOG = Reduce(function(x,y) merge(x = x, y = y, by = c("A03_1"), all.x=TRUE), list(B01,D01,ZONA,IPM,DISCAPACIDAD,INTEGRANTES,PERFILES,VICTIMA,MUJERJEFE,SEXO,PIRAMIDES,ESTADO))#Se unen los dataframe de frecuencias de individuos.
+setnames(DATA_Municipal_HOG, old = "A03_1", new = "CodigoMunicipio")
 
 MUNICIPIOS = read_excel("~/Datos/2018/MUNICIPIOS.xlsx")
-colnames(MUNICIPIOS)[3]="COD_MUNICIPIO"
+setnames(MUNICIPIOS, old = c("CODIGO_MUNICIPIO","DEPARTAMENTO","MUNICIPIO"), new = c("CodigoMunicipio","Departamento","Municipio"))
 
-DATA=merge(DATA[c(-2,-3)],MUNICIPIOS[c(-1,-2)], by="COD_MUNICIPIO", all=TRUE)
+DATA_Municipal_HOG = merge(DATA_Municipal_HOG, MUNICIPIOS, by="CodigoMunicipio")
 
-DATA=DATA[ c("COD_MUNICIPIO","TOTALHOGARES","TOTALINTEGRANTES",
-              sprintf("HOGARES_T%s",seq(1:4)),
-              sprintf("INTEGRANTES_T%s",seq(1:4)),
-              sprintf("PROM_INTEGRANTES_T%s",seq(1:4)),
-              gsub("'","",sprintf("LOGRO'%0.2d'_A",seq(01:26))),
-              gsub("'","",sprintf("LOGRO'%0.2d'_PA",seq(01:26))),
-             grep("_NA",names(DATA),value = TRUE)[-1],"LOGRO26_NA",
-              "CABECERA MUNICIPAL","CENTRO POBLADO","RURAL DISPERSO","RURAL","U100","URBANO",
-              "EN ARRIENDO O SUBARRIENDO","PROPIA, TOTALMENTE PAGADA","PROPIA, LA ESTÁN PAGANDO","EN USUFRUCTO","POSESIÓN SIN TÍTULO","PROPIEDAD COLECTIVA","<NA>",
-              "IPM_NO_POBRE","IPM_POBRE","LP_NO_POBRE","LP_POBRE","LP_POBRE_EXTREMO",
-              "HOMBRE","MUJER","MUJERJEFE","PRIMERA INFANCIA","NIÑEZ","ADOLESCENCIA","JUVENTUD","ADULTO","ADULTO MAYOR",
-              "PERSONAS_DIS","AFRODESCENDIENTE","RAIZAL","ROM","INDÍGENA","PALENQUERO","NINGUNO DE LOS ANTERIORES")]
+DATA_Municipal_HOG$Periodo = 2021
 
-DATA[ , 2:ncol(DATA)][is.na(DATA[ , 2:ncol(DATA)] ) ] = 0
+#Estado de logros por hogar agregado municipal
+BaseGestion_2021$Periodo = 2021
 
-DATA=HOGARES
-DATA$Totalrequeridos_HOGARES=rowSums(DATA[,c(14:24)]=="POR ALCANZAR")
-DATA=DATA[,c("IDHOGAR","Totalrequeridos_HOGARES")]
+df_Municipal = BaseGestion_2021[!duplicated(BaseGestion_2021$idHogar),c("Periodo","Departamento","Municipio","CodigoMunicipio",grep("_I_",grep("logro",names(BaseGestion_2021),value = TRUE),value = TRUE, invert = T))]  %>% gather(key = "LOGRO",value = "ESTADO",grep("_I_",grep("logro",names(BaseGestion_2021),value = TRUE),value = TRUE, invert = T)) %>% group_by(Periodo,Departamento,Municipio,CodigoMunicipio, LOGRO, ESTADO) %>% count()
+df_Municipal = df_Municipal %>% mutate(LOGRO = strsplit(as.character(LOGRO), "_")[[1]][1])
+df_Municipal = df_Municipal[df_Municipal$LOGRO %in% c("logro09","logro10","logro11","logro15","logro21","logro22","logro23","logro24","logro26"),]
+colnames(df_Municipal)[7]="CANTIDAD"
 
-setwd("~/Datos/2019/EJERCICIOS/Visor")
-write.csv2(DATA, file = "HOGARES_IPM_26062019.csv", row.names = FALSE)
+#Estado de logros por integrante agregado municipal
+df_1_Municipal = BaseGestion_2021[c("Periodo","Departamento","Municipio","CodigoMunicipio",grep("_I",names(BaseGestion_2021),value = TRUE))]  %>% gather(key = "LOGRO",value = "ESTADO",grep("_I",names(BaseGestion_2021),value = TRUE)) %>% group_by(Periodo,Departamento,Municipio,CodigoMunicipio, LOGRO, ESTADO) %>% count()
+df_1_Municipal = df_1_Municipal %>% mutate(LOGRO = strsplit(as.character(LOGRO), "_")[[1]][1])
+df_1_Municipal$LOGRO = paste0(df_1_Municipal$LOGRO,"_I")
+df_1_Municipal = df_1_Municipal[!(df_1_Municipal$LOGRO %in% paste(c("logro09","logro10","logro11","logro15","logro21","logro22","logro23","logro24","logro26"),"_I",sep = "")),]
+colnames(df_1_Municipal)[7]="CANTIDAD"
 
-write.csv2(DATA, file = "FRECUENCIAS_MPIO_31052019.csv", row.names = FALSE)
+########################################
+# Unión de datos con otras operaciones #
+########################################
+UNIDOS_HOGARES_MUNICIPAL_06022020 <- read_delim("~/Datos/2020/Tablero de control/UNIDOS_HOGARES_MUNICIPAL_06022020.csv",
+                                                ";", escape_double = FALSE, locale = locale(encoding = "ISO-8859-1"),
+                                                trim_ws = TRUE)
 
-write.csv2(HOGARES[c("IDHOGAR","TIPO_HOG")], file = "HOGARES_PERFIL_14062019.csv", row.names = FALSE)
-write.csv2(DATA_HOG[-5], file = "FRECUENCIAS_MPIO_VICT_14062019.csv", row.names = FALSE)
+MUNICIPAL_ESTADO_DE_LOGROS_07022020 <- read_delim("~/Datos/2020/Tablero de control/MUNICIPAL_ESTADO_DE_LOGROS_07022020.csv", 
+                                                    ";", escape_double = FALSE, trim_ws = TRUE)
 
-library(tidyr)
-library(dplyr)
+MUNICIPAL_ESTADO_DE_LOGROS_I_07022020 <- read_delim("~/Datos/2020/Tablero de control/MUNICIPAL_ESTADO_DE_LOGROS_I_07022020.csv", 
+                                                    ";", escape_double = FALSE, trim_ws = TRUE)
 
-testing %>%
-        gather("type", "categories") %>%
-        table()
+UNIDOS_HOGARES_MUNICIPAL = rbind.fill(DATA_Municipal_HOG, UNIDOS_HOGARES_MUNICIPAL_06022020)
+MUNICIPAL_ESTADO_DE_LOGROS = rbind.fill(df_Municipal, MUNICIPAL_ESTADO_DE_LOGROS_07022020)
+MUNICIPAL_ESTADO_DE_LOGROS_I = rbind.fill(df_1_Municipal, MUNICIPAL_ESTADO_DE_LOGROS_I_07022020)
 
-testing %>%
-  gather("type", "categories") %>%
-  select(categories, type) %>%
-  table()
+UNIDOS_HOGARES_MUNICIPAL = UNIDOS_HOGARES_MUNICIPAL[c(names(UNIDOS_HOGARES_MUNICIPAL_06022020),"NO_DETERMINADO_IPM")]
+UNIDOS_HOGARES_MUNICIPAL$VICTIMA[is.na(UNIDOS_HOGARES_MUNICIPAL$VICTIMA)]=0
+UNIDOS_HOGARES_MUNICIPAL[is.na(UNIDOS_HOGARES_MUNICIPAL)] = 0
 
-library(dplyr)
-library(tidyr)
+MUNICIPIOS <- read_excel("~/Datos/2020/REQUERIMIENTOS/Generacion de cortes/Entradas/MUNICIPIOS.xlsx", 
+                         sheet = "Municipios", skip = 10)
 
-testing %>%
-  gather(measure, value) %>%
-  count(measure, value) %>%
-  spread(measure, n)
+setnames(MUNICIPIOS, old = c("Nombre...2","Nombre...4","Código...3"), new = c("Departamento","Municipio", "CodigoMunicipio"))
+
+UNIDOS_HOGARES_MUNICIPAL$CodigoMunicipio = str_pad(UNIDOS_HOGARES_MUNICIPAL$CodigoMunicipio, width=5, pad="0")
+MUNICIPAL_ESTADO_DE_LOGROS$CodigoMunicipio = str_pad(MUNICIPAL_ESTADO_DE_LOGROS$CodigoMunicipio, width=5, pad="0")
+MUNICIPAL_ESTADO_DE_LOGROS_I$CodigoMunicipio = str_pad(MUNICIPAL_ESTADO_DE_LOGROS_I$CodigoMunicipio, width=5, pad="0")
 
 
-rm(list = ls(pattern = "DATA"))
+UNIDOS_HOGARES_MUNICIPAL = merge(UNIDOS_HOGARES_MUNICIPAL %>% select(-c("Departamento","Municipio")), 
+                                 MUNICIPIOS %>% select(c("Departamento","Municipio","CodigoMunicipio")), by = "CodigoMunicipio", all.x = T)
+
+MUNICIPAL_ESTADO_DE_LOGROS = merge(MUNICIPAL_ESTADO_DE_LOGROS %>% select(-c("Departamento","Municipio")), 
+                                 MUNICIPIOS %>% select(c("Departamento","Municipio","CodigoMunicipio")), by = "CodigoMunicipio", all.x = T)
+
+MUNICIPAL_ESTADO_DE_LOGROS_I = merge(MUNICIPAL_ESTADO_DE_LOGROS_I %>% select(-c("Departamento","Municipio")), 
+                                 MUNICIPIOS %>% select(c("Departamento","Municipio","CodigoMunicipio")), by = "CodigoMunicipio", all.x = T)
+
+UNIDOS_HOGARES_MUNICIPAL$Periodo = as.character(UNIDOS_HOGARES_MUNICIPAL$Periodo)
+MUNICIPAL_ESTADO_DE_LOGROS$Periodo = as.character(MUNICIPAL_ESTADO_DE_LOGROS$Periodo)
+MUNICIPAL_ESTADO_DE_LOGROS_I$Periodo = as.character(MUNICIPAL_ESTADO_DE_LOGROS_I$Periodo)
+
+setwd("~/GitHub/GIT-DPS/RA/2. Sabana/Salidas/Dashboard")
+write.csv2(UNIDOS_HOGARES_MUNICIPAL, file = paste("UNIDOS_MUNICIPAL",".csv", sep=""), row.names = FALSE, fileEncoding = "UTF-8")
+write.csv2(MUNICIPAL_ESTADO_DE_LOGROS, file = paste("MUNICIPAL_ESTADO_DE_LOGROS",".csv", sep=""), row.names = FALSE)
+write.csv2(MUNICIPAL_ESTADO_DE_LOGROS_I, file = paste("MUNICIPAL_ESTADO_DE_LOGROS_I",".csv", sep=""), row.names = FALSE)

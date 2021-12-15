@@ -23,15 +23,16 @@ Archivos_Consulta_2 = Consulta_2 %>% group_by(Archivo) %>% summarise(Consulta_2=
 Archivos_Consulta_3 = Consulta_3 %>% group_by(Archivo) %>% summarise(Consulta_3=n())
 Archivos_Consulta_4 = Consulta_4 %>% group_by(Archivo) %>% summarise(Consulta_4=n())
 Archivos_Consulta_5 = Consulta_5 %>% group_by(Archivo) %>% summarise(Consulta_5=n())
-Archivos_Consulta_6 = Consulta_6 %>% group_by(Archivo) %>% summarise(Consulta_6=n())
+# Archivos_Consulta_6 = Consulta_6 %>% group_by(Archivo) %>% summarise(Consulta_6=n())
 
 
 Archivos_Consulta =Reduce(function(x,y) merge(x = x, y = y, by = c("Archivo"), all.x=TRUE), list(Archivos_Consulta_1,
                                                                                                  Archivos_Consulta_2,
                                                                                                  Archivos_Consulta_3,
                                                                                                  Archivos_Consulta_4,
-                                                                                                 Archivos_Consulta_5,
-                                                                                                 Archivos_Consulta_6))#Unión de datos de hogares
+                                                                                                 Archivos_Consulta_5))#Unión de datos de hogares
 
 
 rm(list = ls()[ls() %in% grep("^Archivos_Consulta_",ls(),value = TRUE)])
+
+Consulta_5 = Consulta_5 %>% drop_na(`NUMERO DOCUMENTO`) %>% arrange(`ID OFERTA`)
