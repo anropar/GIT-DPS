@@ -14,6 +14,7 @@ Precargue = read_delim("Unidos_Sabana_20211027.txt",
                        "|", escape_double = FALSE, col_types = cols(Longitud = col_character(),
                                                                     Latitud = col_character(),
                                                                     Altitud = col_character(),
+                                                                    E09 = col_character(),
                                                                     FechaInicio = col_date(format = "%Y-%m-%d"),
                                                                     E02 = col_date(format = "%Y-%m-%d"),
                                                                     E10 = col_date(format = "%Y-%m-%d"),
@@ -45,6 +46,7 @@ data.files = grep("PlantillaRegistrosAdministrativos_20211008", data.files, valu
 
 Original = do.call(rbind, lapply(data.files, function(x) cbind(read_excel(x, sheet = "Plantilla", col_types = c("numeric", "text", "text", "text", "text", "text", "text", "text", "text", 
                                                                                                                 "text", "text", "text", "date", "text", "date", "text")), Archivo=strsplit(x,'\\.')[[1]][1])))
+
 Original = Original  %>%  filter(if_any(names(Original[-17]), ~ !is.na(.x)))
 
 setwd(paste(Carpeta,"Consultas", sep = slash))
@@ -76,7 +78,7 @@ Original$`TIPO DOCUMENTO` = as.numeric(as.character(recode_factor(Original$`TIPO
                                                                   `Salvoconducto para refugiado` = 7,
                                                                   `Permiso especial de permanencia (PEP) para ciudadanos venezolanos` = 8)))
 
-Original$`ID OFERTA`[Original$`ID OFERTA`==71970 ] <- 71974#Solo aplica para la primera entrega
+# Original$`ID OFERTA`[Original$`ID OFERTA`==71970 ] <- 71974#Solo aplica para la primera entrega
 
 Original = dplyr::mutate(Original, ID = row_number()) %>% arrange(`NUMERO DOCUMENTO`)
 
