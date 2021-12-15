@@ -86,7 +86,7 @@ Data_2020=Original[Original$NA_Documento %in% 1 & !(Original$`FECHA DE LA ATENCI
 #############
 DATA = Precargue
 
-setwd(Carpeta)
+setwd(paste(Carpeta,"Consultas", sep = slash))
 source("Perfiles.R", encoding = "UTF-8")
 source("Ciclo vital.R", encoding = "UTF-8")
 source("Mujer jefe.R", encoding = "UTF-8")
