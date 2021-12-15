@@ -47,7 +47,7 @@ Original = do.call(rbind, lapply(data.files, function(x) cbind(read_excel(x, she
                                                                                                                 "text", "text", "text", "date", "text", "date", "text")), Archivo=strsplit(x,'\\.')[[1]][1])))
 Original = Original  %>%  filter(if_any(names(Original[-17]), ~ !is.na(.x)))
 
-setwd("~/GitHub/GIT-DPS/Consultas")
+setwd(paste(Carpeta,"Consultas", sep = slash))
 source("Limpiador de textos.R")
 Original$`PRIMER NOMBRE` = limpiador_texto(Original$`PRIMER NOMBRE`)
 Original$`SEGUNDO NOMBRE` = limpiador_texto(Original$`SEGUNDO NOMBRE`)

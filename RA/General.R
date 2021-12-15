@@ -39,7 +39,7 @@ setwd(Carpeta)
 source("Filtros.R", encoding = "UTF-8")
 
 setwd(Carpeta)
-source("Consultas.R", encoding = "UTF-8")
+source(paste(Carpeta,"Consultas", sep = slash), encoding = "UTF-8")
 
 #####################
 # 7. Exportaciones  #
