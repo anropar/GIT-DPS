@@ -38,7 +38,7 @@ library(stringr)
 Oferta$`Cód Municipio` = str_pad(Oferta$`Cód Municipio`, 5, pad = "0")
 
 # Registros administrativos
-setwd(paste(dirname(rstudioapi::getSourceEditorContext()$path),"1. Entradas","Entrega 1", sep = slash))
+setwd(paste(dirname(rstudioapi::getSourceEditorContext()$path),"1. Entradas","Entrega 2", sep = slash))
 
 data.files = list.files(pattern = "*.xlsm")
 data.files = grep("PlantillaRegistrosAdministrativos_20211008", data.files, value = T, invert = T)
