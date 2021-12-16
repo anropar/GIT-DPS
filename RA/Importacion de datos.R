@@ -42,7 +42,6 @@ Oferta$`Cód Municipio` = str_pad(Oferta$`Cód Municipio`, 5, pad = "0")
 setwd(paste(dirname(rstudioapi::getSourceEditorContext()$path),"1. Entradas","Entrega 2", sep = slash))
 
 data.files = list.files(pattern = "*.xlsm")
-data.files = grep("PlantillaRegistrosAdministrativos_20211008", data.files, value = T, invert = T)
 
 Original = do.call(rbind, lapply(data.files, function(x) cbind(read_excel(x, sheet = "Plantilla", col_types = c("numeric", "text", "text", "text", "text", "text", "text", "text", "text", 
                                                                                                                 "text", "text", "text", "date", "text", "date", "text")), Archivo=strsplit(x,'\\.')[[1]][1])))
