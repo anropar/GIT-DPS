@@ -10,9 +10,11 @@ Original$`TIPO DOCUMENTO` = as.character(recode_factor(Original$`TIPO DOCUMENTO`
                                                          `8` = "Permiso especial de permanencia (PEP) para ciudadanos venezolanos"))
 
 # Filtro de los registros adminitrativos por las reglas:
-# 1. Cruzar el Numero de documento con la base precargue.
-# 2. No estar duplicado por numero de documento y logro.
-# 3. Contener los logros definidos en la compilación patterns.
+# 1. Excluir regristros sin número de cédula por fuera de la fecha.
+# 2. Cruzar el Numero de documento con la base precargue.
+# 3. Distancia de los nombres inferior al 50%.
+# 4. No estar duplicado por numero de documento y logro.
+# 5. Contener los logros definidos en la compilación patterns.
 
 # Consulta ####
 # No olvidar ejecutar en generación
@@ -31,13 +33,6 @@ Consulta_5_P1 = read_delim(paste(Carpeta,"2. Sabana","Salidas","E1", "Consulta_5
 # Consulta_6_P2 = read_delim(paste(Carpeta,"2. Sabana","Salidas",Entrega, "Consulta_6_E2_xxxxx.txt", sep = slash), ";", escape_double = FALSE, trim_ws = TRUE)
 
 Consulta_AC = Consulta_5_P1# Para las entregas en tiempos posteriores deben acumularsen. Aquí debería estar el rbind
-
-# Consulta_5$ACTIVIDAD_PRODUCTIVA = ifelse(grepl("ACTIVIDAD PRODUCTIVA", toupper(Consulta_5$`LOGRO y/o PRIVACIÓN GESTIONADA`)),1,0)
-# Consulta_5_P1$ACTIVIDAD_PRODUCTIVA = ifelse(grepl("ACTIVIDAD PRODUCTIVA", toupper(Consulta_5_P1$`LOGRO y/o PRIVACIÓN GESTIONADA`)),1,0)
-# 
-# Consulta_5[Consulta_5$ACTIVIDAD_PRODUCTIVA %in% 1,]
-# Consulta_5_P1[Consulta_5_P1$ACTIVIDAD_PRODUCTIVA %in% 1,]
-# Prueba = merge(Consulta_5[Consulta_5$ACTIVIDAD_PRODUCTIVA %in% 1,], Consulta_5_P1[Consulta_5_P1$ACTIVIDAD_PRODUCTIVA %in% 1,], by=c("NUMERO DOCUMENTO", "ESTADO ACCESO A OFERTA"), all.x=T)
 
 Consulta_5$Reportado = ifelse(paste(Consulta_5$`NUMERO DOCUMENTO`, Consulta_5$`ID OFERTA`, Consulta_5$`ESTADO ACCESO A OFERTA`) %in%
                               paste(Consulta_AC$`NUMERO DOCUMENTO`, Consulta_AC$`ID OFERTA`, Consulta_AC$`ESTADO ACCESO A OFERTA`),1,0)
