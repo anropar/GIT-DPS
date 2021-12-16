@@ -15,6 +15,7 @@ Original$`TIPO DOCUMENTO` = as.character(recode_factor(Original$`TIPO DOCUMENTO`
 # 3. Contener los logros definidos en la compilación patterns.
 
 # Consulta ####
+# No olvidar ejecutar en generación
 Consulta_1 = Original[Original$NA_Documento %in% 1 & (Original$`FECHA DE LA ATENCIÓN`)>="2021-01-01",] %>% drop_na("NUMERO DOCUMENTO")
 Consulta_2 = Original[Original$NA_Documento %in% 1 & (Original$`FECHA DE LA ATENCIÓN`)>="2021-01-01" & Original$Cruce %in% 1,] %>% drop_na("NUMERO DOCUMENTO")
 Consulta_3 = Original[Original$NA_Documento %in% 1 & (Original$`FECHA DE LA ATENCIÓN`)>="2021-01-01" & Original$Cruce %in% 1 & Original$Dist_Nombres_Dummy %in% 1,] %>% drop_na("NUMERO DOCUMENTO")
@@ -24,23 +25,22 @@ Consulta_5 = Original[Original$NA_Documento %in% 1 & (Original$`FECHA DE LA ATEN
 # Id hogar unicos de consulta 5
 nrow(Consulta_5[!duplicated(Consulta_5$A01),])
 
-#
-# Consulta_5_P1 = read_delim("~/GitHub/GIT-DPS/RA/2. Sabana/Salidas/E1/Consulta_5_E1_30112021.txt", ";", escape_double = FALSE, trim_ws = TRUE)
-# 
+Entrega = "E1"
+
+Consulta_5_P1 = read_delim(paste(Carpeta,"2. Sabana","Salidas",Entrega, "Consulta_5_E1_02122021.txt", sep = slash), ";", escape_double = FALSE, trim_ws = TRUE)
+
 # Consulta_5$ACTIVIDAD_PRODUCTIVA = ifelse(grepl("ACTIVIDAD PRODUCTIVA", toupper(Consulta_5$`LOGRO y/o PRIVACIÓN GESTIONADA`)),1,0)
 # Consulta_5_P1$ACTIVIDAD_PRODUCTIVA = ifelse(grepl("ACTIVIDAD PRODUCTIVA", toupper(Consulta_5_P1$`LOGRO y/o PRIVACIÓN GESTIONADA`)),1,0)
 # 
 # Consulta_5[Consulta_5$ACTIVIDAD_PRODUCTIVA %in% 1,]
 # Consulta_5_P1[Consulta_5_P1$ACTIVIDAD_PRODUCTIVA %in% 1,]
-# 
 # Prueba = merge(Consulta_5[Consulta_5$ACTIVIDAD_PRODUCTIVA %in% 1,], Consulta_5_P1[Consulta_5_P1$ACTIVIDAD_PRODUCTIVA %in% 1,], by=c("NUMERO DOCUMENTO", "ESTADO ACCESO A OFERTA"), all.x=T)
-# 
-# Consulta_5$Reportado = ifelse(Consulta_5[Consulta_5$ACTIVIDAD_PRODUCTIVA %in% 1,]$`NUMERO DOCUMENTO` %in% 
-#                               Consulta_5_P1[Consulta_5_P1$ACTIVIDAD_PRODUCTIVA %in% 1,]$`NUMERO DOCUMENTO` &
-#                               (as.character(Consulta_5$`ESTADO ACCESO A OFERTA`) %in% as.character(Consulta_5_P1$`ESTADO ACCESO A OFERTA`)),1,0)
-# 
-# Consulta_6 = Consulta_5[Consulta_5$Reportado %in% 0,]
-# 
-# Consulta_6$`FECHA DE NACIMIENTO` = gsub("/","-",format(as.Date(Consulta_6$`FECHA DE NACIMIENTO`),'%d/%m/%Y'))
-# Consulta_6$`FECHA DE LA ATENCIÓN` = gsub("/","-",format(as.Date(Consulta_6$`FECHA DE LA ATENCIÓN`),'%d/%m/%Y'))
+
+Consulta_5$Reportado = ifelse(paste(Consulta_5$`NUMERO DOCUMENTO`, Consulta_5$`ID OFERTA`, Consulta_5$`ESTADO ACCESO A OFERTA`) %in%
+                              paste(Consulta_5_P1$`NUMERO DOCUMENTO`, Consulta_5_P1$`ID OFERTA`, Consulta_5_P1$`ESTADO ACCESO A OFERTA`),1,0)
+
+Consulta_6 = Consulta_5[Consulta_5$Reportado %in% 0,]
+
+Consulta_6$`FECHA DE NACIMIENTO` = gsub("/","-",format(as.Date(Consulta_6$`FECHA DE NACIMIENTO`),'%d/%m/%Y'))
+Consulta_6$`FECHA DE LA ATENCIÓN` = gsub("/","-",format(as.Date(Consulta_6$`FECHA DE LA ATENCIÓN`),'%d/%m/%Y'))
 
