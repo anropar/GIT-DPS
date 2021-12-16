@@ -142,6 +142,7 @@ colnames(df_1_Municipal)[7]="CANTIDAD"
 ########################################
 # Unión de datos con otras operaciones #
 ########################################
+# Descargar los archivos de ESRI -ArcGis Online para acumular las nuevas frecuencias
 UNIDOS_HOGARES_MUNICIPAL_06022020 <- read_delim("~/Datos/2020/Tablero de control/UNIDOS_HOGARES_MUNICIPAL_06022020.csv",
                                                 ";", escape_double = FALSE, locale = locale(encoding = "ISO-8859-1"),
                                                 trim_ws = TRUE)
@@ -152,15 +153,16 @@ MUNICIPAL_ESTADO_DE_LOGROS_07022020 <- read_delim("~/Datos/2020/Tablero de contr
 MUNICIPAL_ESTADO_DE_LOGROS_I_07022020 <- read_delim("~/Datos/2020/Tablero de control/MUNICIPAL_ESTADO_DE_LOGROS_I_07022020.csv", 
                                                     ";", escape_double = FALSE, trim_ws = TRUE)
 
+# Compila las frecuencias de los periodos pasados con las nuevas
 UNIDOS_HOGARES_MUNICIPAL = rbind.fill(DATA_Municipal_HOG, UNIDOS_HOGARES_MUNICIPAL_06022020)
 MUNICIPAL_ESTADO_DE_LOGROS = rbind.fill(df_Municipal, MUNICIPAL_ESTADO_DE_LOGROS_07022020)
 MUNICIPAL_ESTADO_DE_LOGROS_I = rbind.fill(df_1_Municipal, MUNICIPAL_ESTADO_DE_LOGROS_I_07022020)
 
 UNIDOS_HOGARES_MUNICIPAL = UNIDOS_HOGARES_MUNICIPAL[c(names(UNIDOS_HOGARES_MUNICIPAL_06022020),"NO_DETERMINADO_IPM")]
-UNIDOS_HOGARES_MUNICIPAL$VICTIMA[is.na(UNIDOS_HOGARES_MUNICIPAL$VICTIMA)]=0
 UNIDOS_HOGARES_MUNICIPAL[is.na(UNIDOS_HOGARES_MUNICIPAL)] = 0
 
-MUNICIPIOS <- read_excel("~/Datos/2020/REQUERIMIENTOS/Generacion de cortes/Entradas/MUNICIPIOS.xlsx", 
+setwd(Entradas)
+MUNICIPIOS = read_excel("MUNICIPIOS.xlsx", 
                          sheet = "Municipios", skip = 10)
 
 setnames(MUNICIPIOS, old = c("Nombre...2","Nombre...4","Código...3"), new = c("Departamento","Municipio", "CodigoMunicipio"))
@@ -168,7 +170,6 @@ setnames(MUNICIPIOS, old = c("Nombre...2","Nombre...4","Código...3"), new = c("
 UNIDOS_HOGARES_MUNICIPAL$CodigoMunicipio = str_pad(UNIDOS_HOGARES_MUNICIPAL$CodigoMunicipio, width=5, pad="0")
 MUNICIPAL_ESTADO_DE_LOGROS$CodigoMunicipio = str_pad(MUNICIPAL_ESTADO_DE_LOGROS$CodigoMunicipio, width=5, pad="0")
 MUNICIPAL_ESTADO_DE_LOGROS_I$CodigoMunicipio = str_pad(MUNICIPAL_ESTADO_DE_LOGROS_I$CodigoMunicipio, width=5, pad="0")
-
 
 UNIDOS_HOGARES_MUNICIPAL = merge(UNIDOS_HOGARES_MUNICIPAL %>% select(-c("Departamento","Municipio")), 
                                  MUNICIPIOS %>% select(c("Departamento","Municipio","CodigoMunicipio")), by = "CodigoMunicipio", all.x = T)

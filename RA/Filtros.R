@@ -47,3 +47,9 @@ Consulta_6 = Consulta_5[Consulta_5$Reportado %in% 0,]
 Consulta_6$`FECHA DE NACIMIENTO` = gsub("/","-",format(as.Date(Consulta_6$`FECHA DE NACIMIENTO`),'%d/%m/%Y'))
 Consulta_6$`FECHA DE LA ATENCIÓN` = gsub("/","-",format(as.Date(Consulta_6$`FECHA DE LA ATENCIÓN`),'%d/%m/%Y'))
 
+# Id hogar unicos de consulta 6
+nrow(Consulta_6[!duplicated(Consulta_6$A01),])
+
+# Aporte a la meta de acompañados
+
+
