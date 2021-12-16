@@ -39,7 +39,7 @@ setwd(Carpeta)
 source("Filtros.R", encoding = "UTF-8")
 
 setwd(Carpeta)
-source(paste(Carpeta,"Consultas", sep = slash), encoding = "UTF-8")
+source("Consultas.R", encoding = "UTF-8")
 
 #####################
 # 7. Exportaciones  #
@@ -57,10 +57,10 @@ Prueba = merge(Original, ReporteAdministrativos[c("ID Oferta","Id_Persona","ID R
 setnames(Prueba, old = c("ID OFERTA","ID Registro Administrativo"), new = c("ID_OFERTA","ID_Registro_Administrativo"))
 
 Prueba =  Prueba[!is.na(Prueba$ID_Registro_Administrativo),] %>% group_by(ID_OFERTA, IdIntegrante) %>%
-                          mutate(lab = toString(ID_Registro_Administrativo)) %>%
+                          mutate(ID_RA = toString(ID_Registro_Administrativo)) %>%
                           as.data.frame()
 
-Prueba = Prueba[!duplicated(Prueba$lab),]
+Prueba = Prueba[!duplicated(Prueba$ID_RA),]
 
 write.table(Original[c(Campos, Marcas,"A01","IdIntegrante","Exitosos","Entrega")], file = paste("RA_",Entrega,"_",format(Sys.time(), "%d%m%Y"),".txt", sep=""), sep = ";", row.names = FALSE, quote = F, na = "", fileEncoding = "ISO-8859-1")
 

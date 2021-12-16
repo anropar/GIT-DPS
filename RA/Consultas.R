@@ -11,8 +11,6 @@ Archivos_Original = Original %>% group_by(Archivo) %>% summarise(Total=n())
 
 Archivos_Original =Reduce(function(x,y) merge(x = x, y = y, by = c("Archivo"), all.x=TRUE), list(Consulta,
                                                                                                  Archivos_Original))#Unión de datos de hogares
-
-
 # Conteos por archivo dataframe Original
 library("dplyr", lib.loc="~/R/R-3.6.3/library")
 library("tidyr", lib.loc="~/R/R-3.6.3/library")
