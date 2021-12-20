@@ -30,9 +30,10 @@ nrow(Consulta_5[!duplicated(Consulta_5$A01),])
 Entrega = "E2"
 
 Consulta_5_P1 = read_delim(paste(Carpeta,"2. Sabana","Salidas","E1", "Consulta_5_E1_02122021.txt", sep = slash), ";", escape_double = FALSE, trim_ws = TRUE)
-# Consulta_6_P2 = read_delim(paste(Carpeta,"2. Sabana","Salidas",Entrega, "Consulta_6_E2_xxxxx.txt", sep = slash), ";", escape_double = FALSE, trim_ws = TRUE)
+Consulta_6_P2 = read_delim(paste(Carpeta,"2. Sabana","Salidas",Entrega, "Consulta_6_E2_16122021.txt", sep = slash), ";", escape_double = FALSE, trim_ws = TRUE)
 
-Consulta_AC = Consulta_5_P1# Para las entregas en tiempos posteriores deben acumularsen. Aquí debería estar el rbind
+Consulta_AC = rbind(Consulta_5_P1[intersect(names(Consulta_5_P1), names(Consulta_6_P2))], 
+                    Consulta_6_P2[intersect(names(Consulta_5_P1), names(Consulta_6_P2))])# Para las entregas en tiempos posteriores deben acumularsen. Aquí debería estar el rbind
 
 Consulta_5$Reportado = ifelse(paste(Consulta_5$`NUMERO DOCUMENTO`, Consulta_5$`ID OFERTA`, Consulta_5$`ESTADO ACCESO A OFERTA`) %in%
                               paste(Consulta_AC$`NUMERO DOCUMENTO`, Consulta_AC$`ID OFERTA`, Consulta_AC$`ESTADO ACCESO A OFERTA`),1,0)

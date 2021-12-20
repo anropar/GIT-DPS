@@ -15,7 +15,6 @@ library(openxlsx)
 library(ggplot2)
 library(plyr)
 library(RColorBrewer)
-library(shiny)   # for web applications
 library(stringi)
 library(stringr)
 library(phonics)

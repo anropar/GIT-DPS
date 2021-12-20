@@ -1,6 +1,6 @@
 # Generación de campos
 detach("package:dplyr", unload=TRUE)
-library("dplyr", lib.loc="~/R/R-3.6.3/library")
+library(dplyr)
 
 Original$NA_Documento = ifelse(!is.na(Original$`NUMERO DOCUMENTO`),1,0)
 
