@@ -34,12 +34,12 @@ Precargue = read_delim("Unidos_Sabana_20211027.txt",
                                                                     J13_1 = col_number()), locale = locale(grouping_mark = ",", encoding = "ISO-8859-1"), trim_ws = TRUE)
 
 # Oferta
-Oferta = read_excel("Oferta disponible 20211216.xlsx")
+Oferta = read_excel("Oferta disponible 20211220.xlsx")
 library(stringr)
 Oferta$`Cód Municipio` = str_pad(Oferta$`Cód Municipio`, 5, pad = "0")
 
 # Registros administrativos
-setwd(paste(dirname(rstudioapi::getSourceEditorContext()$path),"1. Entradas","Entrega 2", sep = slash))
+setwd(paste(dirname(rstudioapi::getSourceEditorContext()$path),"1. Entradas","Entrega 3", sep = slash))
 
 data.files = list.files(pattern = "*.xlsm")
 

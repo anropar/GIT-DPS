@@ -44,7 +44,7 @@ source("Consultas.R", encoding = "UTF-8")
 #####################
 # 7. Exportaciones  #
 #####################
-Entrega = "E2"
+Entrega = "E3"
 
 # Exportaciones
 setwd(paste(Carpeta,"2. Sabana","Salidas",Entrega, sep = slash))# Se define la carpeta donde se va a exportar el cálculo de LOGROS
@@ -53,22 +53,22 @@ setwd(paste(Carpeta,"2. Sabana","Salidas",Entrega, sep = slash))# Se define la c
 Original$Exitosos = ifelse(!(Original$NA_Documento %in% 1 & (Original$`FECHA DE LA ATENCIÓN`)>="2021-01-01" & Original$Cruce %in% 1 & Original$Dist_Nombres_Dummy %in% 1 & Original$Duplicados_Logro %in% 1 & Original$Cruce_Oferta %in% 1 & Original$List_Logros %in% 1),1,0)
 Original$Entrega = Entrega
 
-Prueba = merge(Original, ReporteAdministrativos[c("ID Oferta","Id_Persona","ID Registro Administrativo")], by.x = c("ID OFERTA","IdIntegrante"), by.y = c("ID Oferta","Id_Persona"), all.x = T)
-setnames(Prueba, old = c("ID OFERTA","ID Registro Administrativo"), new = c("ID_OFERTA","ID_Registro_Administrativo"))
+# Prueba = merge(Original, ReporteAdministrativos[c("ID Oferta","Id_Persona","ID Registro Administrativo")], by.x = c("ID OFERTA","IdIntegrante"), by.y = c("ID Oferta","Id_Persona"), all.x = T)
+# setnames(Prueba, old = c("ID OFERTA","ID Registro Administrativo"), new = c("ID_OFERTA","ID_Registro_Administrativo"))
+# 
+# Prueba =  Prueba[!is.na(Prueba$ID_Registro_Administrativo),] %>% group_by(ID_OFERTA, IdIntegrante) %>%
+#                           mutate(ID_RA = toString(ID_Registro_Administrativo)) %>%
+#                           as.data.frame()
+# 
+# Prueba = Prueba[!duplicated(Prueba$ID_RA),]
+# 
+# Prueba = Prueba[!is.na(Prueba$ID_Registro_Administrativo),] %>% group_by(ID_OFERTA, IdIntegrante) %>%
+#               mutate(ID_RA = toString(station)) %>% select(-station) %>% 
+#               as.data.frame()
+# 
+# Prueba = Prueba[!duplicated(Prueba$fish),]
 
-Prueba =  Prueba[!is.na(Prueba$ID_Registro_Administrativo),] %>% group_by(ID_OFERTA, IdIntegrante) %>%
-                          mutate(ID_RA = toString(ID_Registro_Administrativo)) %>%
-                          as.data.frame()
-
-Prueba = Prueba[!duplicated(Prueba$ID_RA),]
-
-Prueba = Prueba[!is.na(Prueba$ID_Registro_Administrativo),] %>% group_by(ID_OFERTA, IdIntegrante) %>%
-              mutate(ID_RA = toString(station)) %>% select(-station) %>% 
-              as.data.frame()
-
-Prueba = Prueba[!duplicated(Prueba$fish),]
-
-
+# Original
 write.table(Original[c(Campos, Marcas,"A01","IdIntegrante","Exitosos","Entrega")], file = paste("RA_",Entrega,"_",format(Sys.time(), "%d%m%Y"),".txt", sep=""), sep = ";", row.names = FALSE, quote = F, na = "", fileEncoding = "ISO-8859-1")
 
 # Consulta 5
