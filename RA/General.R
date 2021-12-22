@@ -93,7 +93,7 @@ write.csv(Archivos_Original, file = paste("Archivos_Original_",Entrega,"_",forma
 DATA = Precargue[c("A01","IdIntegrante","A03_1","A04","B01","EdadCargue","E02","E01_1","E01_2","E01_3","E01_4","E03","E08","E09","E14","D01", grep("F01", names(Precargue), value = T)[-8])]
 DATA$E02_1 = DATA$EdadCargue
 
-setwd(paste(Carpeta,"Consultas", sep = slash))
+setwd(Carpeta)
 source("Perfiles.R", encoding = "UTF-8")
 source("Ciclo vital.R", encoding = "UTF-8")
 source("Mujer jefe.R", encoding = "UTF-8")
