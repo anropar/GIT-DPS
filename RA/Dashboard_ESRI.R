@@ -48,6 +48,8 @@ BaseGestion_2021 = read_delim("BaseGestion Hogares Acompañados 2021.txt", ";", 
 DATA = DATA[DATA$IdIntegrante %in% BaseGestion_2021$idIntegranteHogar,]
 DATA = merge(DATA, BaseGestion_2021[c("idIntegranteHogar","denominacionIPM","EstadoHogar")], by.x = "IdIntegrante", by.y = "idIntegranteHogar")
 
+rm(BaseGestion_2021)
+
 setwd(Carpeta)
 source("Perfiles.R", encoding = "UTF-8")
 source("Ciclo vital.R", encoding = "UTF-8")
