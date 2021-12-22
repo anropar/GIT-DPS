@@ -84,11 +84,6 @@ write.csv(Archivos_Consulta, file = paste("Archivos_Consulta_",Entrega,"_",forma
 # Archivos original
 write.csv(Archivos_Original, file = paste("Archivos_Original_",Entrega,"_",format(Sys.time(), "%d%m%Y"),".csv", sep=""), row.names = FALSE)
 
-# Consulta 2020
-write.table(Consulta_5_E1[year(Consulta_5_E1$`FECHA DE LA ATENCIÓN`) %in% "2020",], file = paste("Consulta_5_E1_","2020","_",format(Sys.time(), "%d%m%Y"),".txt", sep=""), sep = ";", row.names = FALSE, quote = F, na = "", fileEncoding = "ISO-8859-1")
-RA_E1_30112021 = RA_E1_30112021[RA_E1_30112021$NA_Documento %in% 1 & (RA_E1_30112021$`FECHA DE LA ATENCIÓN`)>="2021-01-01" & RA_E1_30112021$Cruce %in% 1 & RA_E1_30112021$Dist_Nombres_Dummy %in% 1 & RA_E1_30112021$Duplicados_Logro %in% 1 & RA_E1_30112021$Cruce_Oferta %in% 1 & RA_E1_30112021$List_Logros %in% 1,]
-Data_2020=Original[Original$NA_Documento %in% 1 & !(Original$`FECHA DE LA ATENCIÓN`)>="2021-01-01" & Original$Cruce %in% 1 & Original$Dist_Nombres_Dummy %in% 1 & Original$Duplicados_Logro %in% 1 & Original$Cruce_Oferta %in% 1 & Original$List_Logros %in% 1,] %>% drop_na("NUMERO DOCUMENTO")
-
 #####################
 # 2. DASHBOARD ESRI #
 #####################
