@@ -88,7 +88,7 @@ write.csv(Archivos_Original, file = paste("Archivos_Original_",Entrega,"_",forma
 # 2. DASHBOARD ESRI #
 #####################
 #################
-# 2.1. Victimas #
+# 2.1. Marcas #
 #################
 DATA = Precargue[c("A01","IdIntegrante","A03_1","A04","B01","EdadCargue","E02","E01_1","E01_2","E01_3","E01_4","E03","E08","E09","E14","D01", grep("F01", names(Precargue), value = T)[-8])]
 DATA$E02_1 = DATA$EdadCargue
