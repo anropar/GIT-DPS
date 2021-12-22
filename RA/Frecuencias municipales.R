@@ -134,6 +134,8 @@ df_1_Municipal$LOGRO = paste0(df_1_Municipal$LOGRO,"_I")
 df_1_Municipal = df_1_Municipal[!(df_1_Municipal$LOGRO %in% paste(c("logro09","logro10","logro11","logro15","logro21","logro22","logro23","logro24","logro26"),"_I",sep = "")),]
 colnames(df_1_Municipal)[7]="CANTIDAD"
 
+rm(list = ls()[!ls() %in% grep("DATA|Precargue|BaseGestion_2021",ls(),value = TRUE)])
+
 ########################################
 # Unión de datos con otras operaciones #
 ########################################
