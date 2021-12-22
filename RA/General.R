@@ -72,8 +72,8 @@ Original$Entrega = Entrega
 write.table(Original[c(Campos, Marcas,"A01","IdIntegrante","Exitosos","Entrega")], file = paste("RA_",Entrega,"_",format(Sys.time(), "%d%m%Y"),".txt", sep=""), sep = ";", row.names = FALSE, quote = F, na = "", fileEncoding = "ISO-8859-1")
 
 # Consulta 5
-write.table(Consulta_5[Campos], file = paste("Consulta_5_OTI_",Entrega,"_",format(Sys.time(), "%d%m%Y"),".txt", sep=""), sep = ";", row.names = FALSE, quote = F, na = "", fileEncoding = "UTF-8")
-write.table(Consulta_5[c(Campos,"A01","IdIntegrante")], file = paste("Consulta_5_",Entrega,"_",format(Sys.time(), "%d%m%Y"),".txt", sep=""), sep = ";", row.names = FALSE, quote = F, na = "", fileEncoding = "UTF-8")
+# write.table(Consulta_5[Campos], file = paste("Consulta_5_OTI_",Entrega,"_",format(Sys.time(), "%d%m%Y"),".txt", sep=""), sep = ";", row.names = FALSE, quote = F, na = "", fileEncoding = "UTF-8")
+# write.table(Consulta_5[c(Campos,"A01","IdIntegrante")], file = paste("Consulta_5_",Entrega,"_",format(Sys.time(), "%d%m%Y"),".txt", sep=""), sep = ";", row.names = FALSE, quote = F, na = "", fileEncoding = "UTF-8")
 
 # Consulta 6
 write.table(Consulta_6[Campos], file = paste("Consulta_6_OTI_",Entrega,"_",format(Sys.time(), "%d%m%Y"),".txt", sep=""), sep = ";", row.names = FALSE, quote = F, na = "", fileEncoding = "ISO-8859-1")
@@ -90,7 +90,8 @@ write.csv(Archivos_Original, file = paste("Archivos_Original_",Entrega,"_",forma
 #################
 # 2.1. Victimas #
 #################
-DATA = Precargue
+DATA = Precargue[c("A01","IdIntegrante","A03_1","A04","B01","EdadCargue","E02","E01_1","E01_2","E01_3","E01_4","E03","E08","E09","E14","D01", grep("F01", names(Precargue), value = T)[-8])]
+DATA$E02_1 = DATA$EdadCargue
 
 setwd(paste(Carpeta,"Consultas", sep = slash))
 source("Perfiles.R", encoding = "UTF-8")
