@@ -48,4 +48,3 @@ nrow(Consulta_6[!duplicated(Consulta_6$A01),])
 
 # Aporte a la meta de acompañados
 
-
