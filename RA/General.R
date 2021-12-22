@@ -93,6 +93,11 @@ write.csv(Archivos_Original, file = paste("Archivos_Original_",Entrega,"_",forma
 DATA = Precargue[c("A01","IdIntegrante","A03_1","A04","B01","EdadCargue","E02","E01_1","E01_2","E01_3","E01_4","E03","E08","E09","E14","D01", grep("F01", names(Precargue), value = T)[-8])]
 DATA$E02_1 = DATA$EdadCargue
 
+setwd(Entradas)
+BaseGestion_2021 = read_delim("BaseGestion Hogares Acompañados 2021.txt", ";", escape_double = FALSE, locale = locale(encoding = "ISO-8859-1"), trim_ws = TRUE)
+DATA = DATA[DATA$IdIntegrante %in% BaseGestion_2021$idIntegranteHogar,]
+DATA = merge(DATA, BaseGestion_2021[c("idIntegranteHogar","denominacionIPM","EstadoHogar")], by.x = "IdIntegrante", by.y = "idIntegranteHogar")
+
 setwd(Carpeta)
 source("Perfiles.R", encoding = "UTF-8")
 source("Ciclo vital.R", encoding = "UTF-8")

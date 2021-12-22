@@ -6,8 +6,6 @@
 ###########################
 setwd(Entradas)
 
-BaseGestion_2021 = read_delim("BaseGestion Hogares Acompañados 2021.txt", ";", escape_double = FALSE, locale = locale(encoding = "ISO-8859-1"), trim_ws = TRUE)
- 
 # LOGROS_HOG = read_delim("Unidos_Logros_Hogar_20211203.txt", 
 #                          "|", escape_double = FALSE, locale = locale(encoding = "ISO-8859-1"), 
 #                          trim_ws = TRUE)
@@ -15,9 +13,6 @@ BaseGestion_2021 = read_delim("BaseGestion Hogares Acompañados 2021.txt", ";", 
 # LOGROS_INT = read_delim("Unidos_Logros_Integrante_20211203.txt", 
 #                          "|", escape_double = FALSE, locale = locale(encoding = "ISO-8859-1"), 
 #                          trim_ws = TRUE)
-
-DATA = DATA[DATA$IdIntegrante %in% BaseGestion_2021$idIntegranteHogar,]
-DATA = merge(DATA, BaseGestion_2021[c("idIntegranteHogar","denominacionIPM","EstadoHogar")], by.x = "IdIntegrante", by.y = "idIntegranteHogar")
 
 ##########
 #HOGARES
