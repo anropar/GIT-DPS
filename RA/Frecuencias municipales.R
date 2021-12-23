@@ -140,14 +140,14 @@ rm(list = ls()[!ls() %in% grep("DATA|Precargue|BaseGestion_2021",ls(),value = TR
 # Unión de datos con otras operaciones #
 ########################################
 # Descargar los archivos de ESRI -ArcGis Online para acumular las nuevas frecuencias
-UNIDOS_HOGARES_MUNICIPAL_06022020 <- read_delim("~/Datos/2020/Tablero de control/UNIDOS_HOGARES_MUNICIPAL_06022020.csv",
+UNIDOS_HOGARES_MUNICIPAL_06022020 <- read_delim("UNIDOS_HOGARES_MUNICIPAL_06022020.csv",
                                                 ";", escape_double = FALSE, locale = locale(encoding = "ISO-8859-1"),
                                                 trim_ws = TRUE)
 
-MUNICIPAL_ESTADO_DE_LOGROS_07022020 <- read_delim("~/Datos/2020/Tablero de control/MUNICIPAL_ESTADO_DE_LOGROS_07022020.csv", 
+MUNICIPAL_ESTADO_DE_LOGROS_07022020 <- read_delim("MUNICIPAL_ESTADO_DE_LOGROS_07022020.csv", 
                                                     ";", escape_double = FALSE, trim_ws = TRUE)
 
-MUNICIPAL_ESTADO_DE_LOGROS_I_07022020 <- read_delim("~/Datos/2020/Tablero de control/MUNICIPAL_ESTADO_DE_LOGROS_I_07022020.csv", 
+MUNICIPAL_ESTADO_DE_LOGROS_I_07022020 <- read_delim("MUNICIPAL_ESTADO_DE_LOGROS_I_07022020.csv", 
                                                     ";", escape_double = FALSE, trim_ws = TRUE)
 
 # Compila las frecuencias de los periodos pasados con las nuevas
