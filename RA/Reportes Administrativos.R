@@ -3,13 +3,13 @@
 ##############################
 setwd(paste(Carpeta,"2. Sabana", "Salidas", sep = "/"))
 
-Consulta_5_E1_02122021 = read_delim(paste("E1","Consulta_5_E1_02122021.txt", sep = "/"), ";", escape_double = FALSE, locale = locale(encoding = "ISO-8859-1"), trim_ws = TRUE)
-Consulta_6_E2_02122021 = read_delim(paste("E2","Consulta_6_E2_16122021.txt", sep = "/"), ";", escape_double = FALSE, locale = locale(encoding = "ISO-8859-1"), trim_ws = TRUE)
-Consulta_6_E3_23122021 = read_delim(paste("E3","Consulta_6_E3_23122021.txt", sep = "/"), ";", escape_double = FALSE, locale = locale(encoding = "ISO-8859-1"), trim_ws = TRUE)
+RA_E1_02122021 = read_delim(paste("E1","RA_E1_02122021.txt", sep = "/"), ";", escape_double = FALSE, locale = locale(encoding = "ISO-8859-1"), trim_ws = TRUE)
+RA_E2_02122021 = read_delim(paste("E2","RA_E2_16122021.txt", sep = "/"), ";", escape_double = FALSE, locale = locale(encoding = "ISO-8859-1"), trim_ws = TRUE)
+RA_E3_23122021 = read_delim(paste("E3","RA_E3_23122021.txt", sep = "/"), ";", escape_double = FALSE, locale = locale(encoding = "ISO-8859-1"), trim_ws = TRUE)
 
-Interseccion=intersect(names(Consulta_5_E1_02122021), intersect(names(Consulta_6_E2_02122021), names(Consulta_6_E3_23122021)))
+Interseccion = intersect(names(RA_E1_02122021), intersect(names(RA_E2_02122021), names(RA_E3_23122021)))
 
-Original_AC = rbind(Consulta_5_E1_02122021[Interseccion], Consulta_6_E2_02122021[Interseccion], Consulta_6_E3_23122021[Interseccion])
+Original_AC = rbind(RA_E1_02122021[Interseccion], RA_E2_02122021[Interseccion], RA_E3_23122021[Interseccion])
 
 setwd(paste(dirname(rstudioapi::getSourceEditorContext()$path),"1. Entradas","Reporte_Administrativos", sep = slash))
 ReporteAdministrativos = read_delim("ReporteAdministrativo_22_diciembre.txt", ";", escape_double = FALSE, trim_ws = TRUE)
