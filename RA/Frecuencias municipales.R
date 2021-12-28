@@ -6,13 +6,13 @@
 ###########################
 setwd(Entradas)
 
-# LOGROS_HOG = read_delim("Unidos_Logros_Hogar_20211203.txt", 
-#                          "|", escape_double = FALSE, locale = locale(encoding = "ISO-8859-1"), 
-#                          trim_ws = TRUE)
-# 
-# LOGROS_INT = read_delim("Unidos_Logros_Integrante_20211203.txt", 
-#                          "|", escape_double = FALSE, locale = locale(encoding = "ISO-8859-1"), 
-#                          trim_ws = TRUE)
+LOGROS_HOG = read_delim("Unidos_Logros_Hogar_20211227.txt",
+                         "|", escape_double = FALSE, locale = locale(encoding = "ISO-8859-1"),
+                         trim_ws = TRUE)
+
+LOGROS_INT = read_delim("Unidos_Logros_Integrante_20211227.txt",
+                         "|", escape_double = FALSE, locale = locale(encoding = "ISO-8859-1"),
+                         trim_ws = TRUE)
 
 ##########
 #HOGARES
@@ -22,7 +22,7 @@ PERFILES = reshape2::dcast(data=DATA[!duplicated(DATA$A01), c("A03_1","PERFIL_HO
                             fun.aggregate = length,
                             value.var = "PERFIL_HOG")#Genera frecuencias en columnas de la variable definida
 
-setnames(PERFILES, old = c("AFIANZAMIENTO") , new = c("PRODUCTIVO"))
+setnames(PERFILES, old = c("AFIANZAMIENTO"), new = c("PRODUCTIVO"))
 
 D01 = reshape2::dcast(data=DATA[!duplicated(DATA$A01), c("A03_1","D01")],
                        A03_1 ~ D01,

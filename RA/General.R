@@ -20,7 +20,6 @@ slash = "/"
 
 Entradas=paste(Carpeta,"1. Entradas", sep = slash)# Defina el escritorio de entrada donde están los archivos requeridos.
 Salidas =paste(paste(Carpeta,"Salidas","Validacion_", sep = slash), Fecha, sep = "")# Defina el escritorio de salida donde serán enviado los archivos generados.
-General =paste(Carpeta,"General", sep = slash)# Defina el escritorio donde se encuentra el script con el nombre de "General.R"
 
 #     LIBRERIAS   ####
 setwd(Carpeta)
@@ -47,6 +46,9 @@ source("Consultas.R", encoding = "UTF-8")
 #####################
 # 4. Exportaciones  #
 #####################
+Campos = read_excel(paste(Entradas,"PlantillaRegistrosAdministrativos_20211008.xlsm", sep = slash), sheet = "Plantilla")
+Campos = names(Campos)
+
 Entrega = "E3"
 
 # Exportaciones
