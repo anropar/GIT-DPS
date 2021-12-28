@@ -4,15 +4,6 @@
 # 3. De los que cruzan anteriormente a cuantos hogares unicos corresponden
 # 4. Estado del hoagr de los anteriores hogares unicos (CalculoHogares)
 
-#### Librerias ####
-
-library(dplyr)
-library(tidyverse)
-library(summarytools)
-library(reader)
-library(readr)
-library(readxl)
-
 #### Rutas ####
 
 Carpeta = dirname(rstudioapi::getSourceEditorContext()$path)#El ultimo slash o backslash no se debe incluir
@@ -22,6 +13,9 @@ slash = "/"
 Entradas=paste(Carpeta,"1. Entradas", sep = slash)# Defina el escritorio de entrada donde están los archivos requeridos.
 Salidas =paste(Carpeta,"2. Salidas", sep = slash)# Defina el escritorio de salida donde serán enviado los archivos generados.
 
+#     LIBRERIAS   ####
+setwd(Carpeta)
+source("Librerias.R", encoding = "UTF-8")# Las librerias que se usaran
 
 #### Preparación Base Corte ####
 
@@ -49,8 +43,7 @@ HogaresPosiblesDuplicados = LOGROS_HOG %>% filter(PosiblesDuplicados == 0)
 Unidos_Logros_Integrante = read_delim("Unidos_Logros_Integrante_20211223.txt", 
                                                 delim = "|", escape_double = FALSE, locale = locale(encoding = "ISO-8859-1"),  trim_ws = TRUE)
 
-
-ReporteAdministrativo = read_delim("ReporteAdministrativo_22_diciembre.txt", delim = ";", escape_double = FALSE, trim_ws = TRUE)
+ReporteAdministrativo = read_delim(paste("Reporte_Administrativos","ReporteAdministrativo_22_diciembre.txt", sep = slash), delim = ";", escape_double = FALSE, trim_ws = TRUE)
                                                  
 Unidos_Logros_Integrante = Unidos_Logros_Integrante %>% mutate(PosiblesDuplicados =  ifelse(idHogar %in% HogaresPosiblesDuplicados$idHogar, 0, 1))
 
