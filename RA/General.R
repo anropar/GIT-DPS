@@ -20,7 +20,6 @@ slash = "/"
 
 Entradas=paste(Carpeta,"1. Entradas", sep = slash)# Defina el escritorio de entrada donde están los archivos requeridos.
 Salidas =paste(paste(Carpeta,"Salidas","Validacion_", sep = slash), Fecha, sep = "")# Defina el escritorio de salida donde serán enviado los archivos generados.
-General =paste(Carpeta,"General", sep = slash)# Defina el escritorio donde se encuentra el script con el nombre de "General.R"
 
 #     LIBRERIAS   ####
 setwd(Carpeta)
@@ -32,18 +31,24 @@ source("Librerias.R", encoding = "UTF-8")# Las librerias que se usaran
 setwd(Carpeta)
 source("Importacion de datos.R", encoding = "UTF-8")
 
-#############
-# 2. Consultas #
-#############
+##############
+# 2. Filtros #
+##############
 setwd(Carpeta)
 source("Filtros.R", encoding = "UTF-8")
 
+################
+# 3. Consultas #
+################
 setwd(Carpeta)
 source("Consultas.R", encoding = "UTF-8")
 
 #####################
-# 7. Exportaciones  #
+# 4. Exportaciones  #
 #####################
+Campos = read_excel(paste(Entradas,"PlantillaRegistrosAdministrativos_20211008.xlsm", sep = slash), sheet = "Plantilla")
+Campos = names(Campos)
+
 Entrega = "E3"
 
 # Exportaciones
@@ -53,22 +58,6 @@ setwd(paste(Carpeta,"2. Sabana","Salidas",Entrega, sep = slash))# Se define la c
 Original$Exitosos = ifelse(!(Original$NA_Documento %in% 1 & (Original$`FECHA DE LA ATENCIÓN`)>="2021-01-01" & Original$Cruce %in% 1 & Original$Dist_Nombres_Dummy %in% 1 & Original$Duplicados_Logro %in% 1 & Original$Cruce_Oferta %in% 1 & Original$List_Logros %in% 1),1,0)
 Original$Entrega = Entrega
 
-# Prueba = merge(Original, ReporteAdministrativos[c("ID Oferta","Id_Persona","ID Registro Administrativo")], by.x = c("ID OFERTA","IdIntegrante"), by.y = c("ID Oferta","Id_Persona"), all.x = T)
-# setnames(Prueba, old = c("ID OFERTA","ID Registro Administrativo"), new = c("ID_OFERTA","ID_Registro_Administrativo"))
-# 
-# Prueba =  Prueba[!is.na(Prueba$ID_Registro_Administrativo),] %>% group_by(ID_OFERTA, IdIntegrante) %>%
-#                           mutate(ID_RA = toString(ID_Registro_Administrativo)) %>%
-#                           as.data.frame()
-# 
-# Prueba = Prueba[!duplicated(Prueba$ID_RA),]
-# 
-# Prueba = Prueba[!is.na(Prueba$ID_Registro_Administrativo),] %>% group_by(ID_OFERTA, IdIntegrante) %>%
-#               mutate(ID_RA = toString(station)) %>% select(-station) %>% 
-#               as.data.frame()
-# 
-# Prueba = Prueba[!duplicated(Prueba$fish),]
-
-# Original
 write.table(Original[c(Campos, Marcas,"A01","IdIntegrante","Exitosos","Entrega")], file = paste("RA_",Entrega,"_",format(Sys.time(), "%d%m%Y"),".txt", sep=""), sep = ";", row.names = FALSE, quote = F, na = "", fileEncoding = "ISO-8859-1")
 
 # Consulta 5
@@ -84,37 +73,3 @@ write.csv(Archivos_Consulta, file = paste("Archivos_Consulta_",Entrega,"_",forma
 # Archivos original
 write.csv(Archivos_Original, file = paste("Archivos_Original_",Entrega,"_",format(Sys.time(), "%d%m%Y"),".csv", sep=""), row.names = FALSE)
 
-#####################
-# 2. DASHBOARD ESRI #
-#####################
-#################
-# 2.1. Marcas #
-#################
-DATA = Precargue[c("A01","IdIntegrante","A03_1","A04","B01","EdadCargue","E02","E01_1","E01_2","E01_3","E01_4","E03","E08","E09","E14","D01", grep("F01", names(Precargue), value = T)[-8])]
-DATA$E02_1 = DATA$EdadCargue
-
-setwd(Entradas)
-BaseGestion_2021 = read_delim("BaseGestion Hogares Acompañados 2021.txt", ";", escape_double = FALSE, locale = locale(encoding = "ISO-8859-1"), trim_ws = TRUE)
-DATA = DATA[DATA$IdIntegrante %in% BaseGestion_2021$idIntegranteHogar,]
-DATA = merge(DATA, BaseGestion_2021[c("idIntegranteHogar","denominacionIPM","EstadoHogar")], by.x = "IdIntegrante", by.y = "idIntegranteHogar")
-
-setwd(Carpeta)
-source("Perfiles.R", encoding = "UTF-8")
-source("Ciclo vital.R", encoding = "UTF-8")
-source("Mujer jefe.R", encoding = "UTF-8")
-
-DATA = Perfiles(DATA, A01, E02_1)# Genera la columna de perfil del hogar
-DATA = Ciclo(DATA, E02_1)# Genera la columna de ciclo vital
-DATA = Mujer_jefe(DATA, E03, E14)# Genera la columna de ciclo vital
-
-#################
-# 2.2. Victimas #
-#################
-setwd(Carpeta)
-source("Victimas.R", encoding = "UTF-8")# Genera las marcas de victimas
-
-###############################
-# 10. Frecuencias municipales #
-###############################
-setwd(Carpeta)
-source("Frecuencias municipales.R", encoding = "UTF-8")# Genera el archivo de frecuencias municipales
