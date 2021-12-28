@@ -6,8 +6,8 @@
 ###########################
 setwd(Entradas)
 
-LOGROS_HOG = read_delim("Unidos_Logros_Hogar_20211227.txt",
-                         "|", escape_double = FALSE, locale = locale(encoding = "ISO-8859-1"),
+LOGROS_HOG = read_delim("Unidos_Logros_Hogar_20211228.txt",
+                         "|", escape_double = FALSE, locale = locale(encoding = "UTF-8"),
                          trim_ws = TRUE)
 
 LOGROS_INT = read_delim("Unidos_Logros_Integrante_20211227.txt",

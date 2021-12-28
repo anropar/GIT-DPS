@@ -47,7 +47,6 @@ ReporteAdministrativo = read_delim(paste("Reporte_Administrativos","ReporteAdmin
                                                  
 Unidos_Logros_Integrante = Unidos_Logros_Integrante %>% mutate(PosiblesDuplicados =  ifelse(idHogar %in% HogaresPosiblesDuplicados$idHogar, 0, 1))
 
-
 CalculoIntegrantes = Unidos_Logros_Integrante %>% mutate(CruceRegAdmin = ifelse(idIntegranteHogar %in% ReporteAdministrativo$Id_Persona, 0, 1))
 
 CalculoIntegrantes_2 = CalculoIntegrantes %>% filter(CruceRegAdmin == 0 & PosiblesDuplicados == 1)
@@ -160,7 +159,6 @@ BaseGestion = merge(BaseGestion, Base_Gestion_2021[, c("idHogar", "idIntegranteH
 
 
 BaseGestion = BaseGestion  %>%  select(idHogar, EstadoHogar, idIntegranteHogar, CodigoDepartamento, Departamento, CodigoMunicipio, Municipio, Zona, `Telefono Celular`, EdadCargue,
-                                       
                                        `logro02_afiliación a salud`,
                                        `logro06_educación inicial`, 
                                         logro07_escolarización, 
@@ -174,7 +172,6 @@ BaseGestion = BaseGestion  %>%  select(idHogar, EstadoHogar, idIntegranteHogar, 
                                        `logro23_no hacinamiento`,
                                        `logro25_actividad productiva`, 
                                        `logro27_familias en acción`,
-                                       
                                        `logro02_I_afiliación a salud`,
                                        `logro06_I_educación inicial`, 
                                         logro07_I_escolarización, 
@@ -187,9 +184,7 @@ BaseGestion = BaseGestion  %>%  select(idHogar, EstadoHogar, idIntegranteHogar, 
                                        `logro22_I_paredes adecuadas`, 
                                        `logro23_I_no hacinamiento`, 
                                        `logro25_I_actividad productiva`,
-                                       `logro27_I_familias en acción`,
-                                       
-                                       fechaCalculoLogros, denominacionIPM, fechaCalculoIPM)
+                                       `logro27_I_familias en acción`,fechaCalculoLogros, denominacionIPM, fechaCalculoIPM)
 
 
 # view(dfSummary(BaseGestion))
