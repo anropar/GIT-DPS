@@ -52,7 +52,7 @@ Campos = names(Campos)
 Entrega = "E3"
 
 # Exportaciones
-setwd(paste(Carpeta,"2. Sabana","Salidas",Entrega, sep = slash))# Se define la carpeta donde se va a exportar el cálculo de LOGROS
+setwd(paste(Carpeta,"Salidas",Entrega, sep = slash))# Se define la carpeta donde se va a exportar el cálculo de LOGROS
 
 # Original con marcas
 Original$Exitosos = ifelse(!(Original$NA_Documento %in% 1 & (Original$`FECHA DE LA ATENCIÓN`)>="2021-01-01" & Original$Cruce %in% 1 & Original$Dist_Nombres_Dummy %in% 1 & Original$Duplicados_Logro %in% 1 & Original$Cruce_Oferta %in% 1 & Original$List_Logros %in% 1),1,0)

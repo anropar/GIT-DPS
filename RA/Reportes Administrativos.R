@@ -1,7 +1,7 @@
 ##############################
 # 1. Reporte Administrativos #
 ##############################
-setwd(paste(Carpeta,"2. Sabana", "Salidas", sep = "/"))
+setwd(paste(Carpeta, "Salidas", sep = "/"))
 
 RA_E1_02122021 = read_delim(paste("E1","RA_E1_02122021.txt", sep = "/"), ";", escape_double = FALSE, locale = locale(encoding = "ISO-8859-1"), trim_ws = TRUE)
 RA_E2_02122021 = read_delim(paste("E2","RA_E2_16122021.txt", sep = "/"), ";", escape_double = FALSE, locale = locale(encoding = "ISO-8859-1"), trim_ws = TRUE)

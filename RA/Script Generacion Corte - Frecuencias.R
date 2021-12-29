@@ -203,7 +203,7 @@ write.table(BaseGestion, file = "BaseGestion Hogares Acomp Diciembre 2021.txt", 
 
 setwd(Entradas)
 
-BaseGestion_Hogares_Acompa_2021 = BaseGestion_Hogares_Acomp_Diciembre_2021
+BaseGestion_Hogares_Acompa_2021 = BaseGestion
 
 Precargue = read_delim("Unidos_Sabana_20211027.txt", delim = "|", escape_double = FALSE, col_types = cols(IdIntegrante = col_number(),
                                                                                                           A03 = col_character(),
@@ -420,7 +420,7 @@ L07_I_ESCOLARIZACION = rename_all(L07_I_ESCOLARIZACION, recode, ALCANZADO = "L07
                                   GESTIONADO = "L07_I_ESCOLARIZACION_GESTIONADO",
                                   "POR ALCANZAR" = "L07_I_ESCOLARIZACION_POR_ALCANZAR",
                                   "NO DETERMINADO" = "L07_I_ESCOLARIZACION_NO_DETERMINADO",
-                                  "NO APLICA" = "L07_I_ESCOLARIZACIONL_NO_APLICA")
+                                  "NO APLICA" = "L07_I_ESCOLARIZACION_NO_APLICA")
 
 
 L07_ESCOLARIZACION = BaseGestion_Hogares_Acompa_2021 %>% select(Departamento, CodigoDepartamento, CodigoMunicipio, idHogar, logro07_escolarización)
@@ -434,7 +434,7 @@ L07_ESCOLARIZACION = rename_all(L07_ESCOLARIZACION, recode, ALCANZADO = "L07_ESC
                                 GESTIONADO = "L07_ESCOLARIZACION_GESTIONADO",
                                 "POR ALCANZAR" = "L07_ESCOLARIZACION_POR_ALCANZAR",
                                 "NO DETERMINADO" = "L07_ESCOLARIZACION_NO_DETERMINADO",
-                                "NO APLICA" = "L07_ESCOLARIZACIONL_NO_APLICA")
+                                "NO APLICA" = "L07_ESCOLARIZACION_NO_APLICA")
 
 
 #### LOGRO 08 NO TRABAJO INFANTIL ####
@@ -824,7 +824,7 @@ BaseGestionFrecuencias = BaseGestionFrecuencias %>%
                   
                   "1. Primera Infancia", "2. Niñez", "3. Adolescencia", "4. Juventud", "5. Adulto", "6. Adulto Mayor",
                   
-                  " TOTAL_INTEGRANTES",	"TOTAL_HOGARES",
+                  "TOTAL_INTEGRANTES",	"TOTAL_HOGARES",
                   
                   "Cabecera Municipal",	"Centro Poblado",	"Rural Disperso",
                   
@@ -876,4 +876,4 @@ BaseGestionFrecuencias = BaseGestionFrecuencias %>% arrange(CodigoDepartamento, 
 setwd(paste(Salidas,"Cortes Certificados", sep = slash))
 write.table(BaseGestionFrecuencias, file = "Frecuencias Base  Gestion Hogares Acompañados - Diciembre 2021.csv", sep = ";", row.names = F)
 
-view(dfSummary(BaseGestionFrecuencias))
+# view(dfSummary(BaseGestionFrecuencias))

@@ -42,3 +42,4 @@ nrow(Consulta_6_E3_23122021[!duplicated(Consulta_6_E3_23122021$A01),])
 nrow(Consulta_6_AC[!duplicated(Consulta_6_AC$A01),])
 
 nrow(ReporteAdministrativos[!duplicated(ReporteAdministrativos$Id_Hogar),])
+
