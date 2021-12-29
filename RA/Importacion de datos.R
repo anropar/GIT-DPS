@@ -86,7 +86,7 @@ Original = dplyr::mutate(Original, ID = row_number()) %>% arrange(`NUMERO DOCUME
 #########################
 
 #Las variables generadas se requieren para calculos posteriores.
-setwd(paste(Carpeta,"2. Sabana","General", sep = slash))
+setwd(Carpeta)
 source("Generacion de campos.R", encoding = "UTF-8")
 
 # DATA = Original %>% drop_na(`NUMERO DOCUMENTO`)
