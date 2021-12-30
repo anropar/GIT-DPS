@@ -140,22 +140,24 @@ rm(list = ls()[!ls() %in% grep("DATA|Precargue|BaseGestion_2021",ls(),value = TR
 # Unión de datos con otras operaciones #
 ########################################
 # Descargar los archivos de ESRI -ArcGis Online para acumular las nuevas frecuencias
-UNIDOS_HOGARES_MUNICIPAL_06022020 <- read_delim("UNIDOS_HOGARES_MUNICIPAL_06022020.csv",
-                                                ";", escape_double = FALSE, locale = locale(encoding = "ISO-8859-1"),
+setwd(paste(Carpeta,"1. Entradas","Dashboard",Entrega, sep = slash))
+
+UNIDOS_HOGARES_MUNICIPAL <- read_delim("UNIDOS_0.csv",
+                                                ",", escape_double = FALSE, locale = locale(encoding = "ISO-8859-1"),
                                                 trim_ws = TRUE)
 
-MUNICIPAL_ESTADO_DE_LOGROS_07022020 <- read_delim("MUNICIPAL_ESTADO_DE_LOGROS_07022020.csv", 
-                                                    ";", escape_double = FALSE, trim_ws = TRUE)
+MUNICIPAL_ESTADO_DE_LOGROS <- read_delim("MUNICIPAL_LOGROS_0.csv", 
+                                                    ",", escape_double = FALSE, trim_ws = TRUE)
 
-MUNICIPAL_ESTADO_DE_LOGROS_I_07022020 <- read_delim("MUNICIPAL_ESTADO_DE_LOGROS_I_07022020.csv", 
-                                                    ";", escape_double = FALSE, trim_ws = TRUE)
+MUNICIPAL_ESTADO_DE_LOGROS_I <- read_delim("MUNICIPAL_LOGROS_I_0.csv", 
+                                                    ",", escape_double = FALSE, trim_ws = TRUE)
 
 # Compila las frecuencias de los periodos pasados con las nuevas
-UNIDOS_HOGARES_MUNICIPAL = rbind.fill(DATA_Municipal_HOG, UNIDOS_HOGARES_MUNICIPAL_06022020)
-MUNICIPAL_ESTADO_DE_LOGROS = rbind.fill(df_Municipal, MUNICIPAL_ESTADO_DE_LOGROS_07022020)
-MUNICIPAL_ESTADO_DE_LOGROS_I = rbind.fill(df_1_Municipal, MUNICIPAL_ESTADO_DE_LOGROS_I_07022020)
+UNIDOS_HOGARES_MUNICIPAL = rbind.fill(DATA_Municipal_HOG, UNIDOS_HOGARES_MUNICIPAL)
+MUNICIPAL_ESTADO_DE_LOGROS = rbind.fill(df_Municipal, MUNICIPAL_ESTADO_DE_LOGROS)
+MUNICIPAL_ESTADO_DE_LOGROS_I = rbind.fill(df_1_Municipal, MUNICIPAL_ESTADO_DE_LOGROS_I)
 
-UNIDOS_HOGARES_MUNICIPAL = UNIDOS_HOGARES_MUNICIPAL[c(names(UNIDOS_HOGARES_MUNICIPAL_06022020),"NO_DETERMINADO_IPM")]
+UNIDOS_HOGARES_MUNICIPAL = UNIDOS_HOGARES_MUNICIPAL[c(names(UNIDOS_HOGARES_MUNICIPAL),"NO_DETERMINADO_IPM")]
 UNIDOS_HOGARES_MUNICIPAL[is.na(UNIDOS_HOGARES_MUNICIPAL)] = 0
 
 setwd(Entradas)
@@ -181,7 +183,7 @@ UNIDOS_HOGARES_MUNICIPAL$Periodo = as.character(UNIDOS_HOGARES_MUNICIPAL$Periodo
 MUNICIPAL_ESTADO_DE_LOGROS$Periodo = as.character(MUNICIPAL_ESTADO_DE_LOGROS$Periodo)
 MUNICIPAL_ESTADO_DE_LOGROS_I$Periodo = as.character(MUNICIPAL_ESTADO_DE_LOGROS_I$Periodo)
 
-setwd(paste(Carpeta,"Salidas","Dashboard",Entrega, sep = slash))
+setwd(paste(Carpeta,"2. Salidas","Dashboard",Entrega, sep = slash))
 write.csv2(UNIDOS_HOGARES_MUNICIPAL, file = paste("UNIDOS_MUNICIPAL",".csv", sep=""), row.names = FALSE, fileEncoding = "UTF-8")
 write.csv2(MUNICIPAL_ESTADO_DE_LOGROS, file = paste("MUNICIPAL_ESTADO_DE_LOGROS",".csv", sep=""), row.names = FALSE)
 write.csv2(MUNICIPAL_ESTADO_DE_LOGROS_I, file = paste("MUNICIPAL_ESTADO_DE_LOGROS_I",".csv", sep=""), row.names = FALSE)
