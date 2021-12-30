@@ -19,7 +19,7 @@ Carpeta = dirname(rstudioapi::getSourceEditorContext()$path)#El ultimo slash o b
 slash = "/"
 
 Entradas=paste(Carpeta,"1. Entradas", sep = slash)# Defina el escritorio de entrada donde están los archivos requeridos.
-Salidas =paste(paste(Carpeta,"Salidas","Validacion_", sep = slash), Fecha, sep = "")# Defina el escritorio de salida donde serán enviado los archivos generados.
+Salidas =paste(Carpeta,"2. Salidas", sep = slash)# Defina el escritorio de salida donde serán enviado los archivos generados.
 
 #     LIBRERIAS   ####
 setwd(Carpeta)
