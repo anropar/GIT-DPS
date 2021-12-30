@@ -112,10 +112,12 @@ colnames(MUJERJEFE)[2]="Mujerjefe"
 DATA_Municipal_HOG = Reduce(function(x,y) merge(x = x, y = y, by = c("A03_1"), all.x=TRUE), list(B01,D01,ZONA,IPM,DISCAPACIDAD,INTEGRANTES,PERFILES,VICTIMA,MUJERJEFE,SEXO,PIRAMIDES,ESTADO))#Se unen los dataframe de frecuencias de individuos.
 setnames(DATA_Municipal_HOG, old = "A03_1", new = "CodigoMunicipio")
 
-MUNICIPIOS = read_excel("MUNICIPIOS.xlsx")
-setnames(MUNICIPIOS, old = c("CODIGO_MUNICIPIO","DEPARTAMENTO","MUNICIPIO"), new = c("CodigoMunicipio","Departamento","Municipio"))
+MUNICIPIOS = read_excel("MUNICIPIOS.xlsx", 
+                        sheet = "Municipios", skip = 10)
 
-DATA_Municipal_HOG = merge(DATA_Municipal_HOG, MUNICIPIOS, by="CodigoMunicipio")
+setnames(MUNICIPIOS, old = c("Nombre...2","Nombre...4","Código...3"), new = c("Departamento","Municipio", "CodigoMunicipio"))
+
+DATA_Municipal_HOG = merge(DATA_Municipal_HOG, MUNICIPIOS[1:4], by="CodigoMunicipio")
 
 DATA_Municipal_HOG$Periodo = 2021
 
