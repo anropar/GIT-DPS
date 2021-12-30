@@ -16,7 +16,7 @@ VICTIMAS$TIPODOCUMENTO = recode_factor(VICTIMAS$TIPODOCUMENTO, `RC` = 1, `NUIP` 
                                                               `PA` = 6, `SR` = 7,
                                                               `PEP` = 8)
 
-setwd(paste(Carpeta,"General", sep = slash))
+setwd(paste(Carpeta,"Consultas", sep = slash))
 source("Fonetico.R")#Se utiliza para dirigir las salidas a las carpetas definidas.
 
 DATA$FONETICO = paste(fonetico(DATA$E01_1),
