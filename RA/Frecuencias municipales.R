@@ -142,7 +142,7 @@ rm(list = ls()[!ls() %in% grep("DATA|Precargue|BaseGestion_2021",ls(),value = TR
 # Unión de datos con otras operaciones #
 ########################################
 # Descargar los archivos de ESRI -ArcGis Online para acumular las nuevas frecuencias
-setwd(paste(Carpeta,"1. Entradas","Dashboard",Entrega, sep = slash))
+setwd(paste(Entradas,"Dashboard", sep = slash))
 
 UNIDOS_HOGARES_MUNICIPAL <- read_delim("UNIDOS_0.csv",
                                                 ",", escape_double = FALSE, locale = locale(encoding = "ISO-8859-1"),
@@ -189,7 +189,7 @@ UNIDOS_HOGARES_MUNICIPAL$Periodo = as.character(UNIDOS_HOGARES_MUNICIPAL$Periodo
 MUNICIPAL_ESTADO_DE_LOGROS$Periodo = as.character(MUNICIPAL_ESTADO_DE_LOGROS$Periodo)
 MUNICIPAL_ESTADO_DE_LOGROS_I$Periodo = as.character(MUNICIPAL_ESTADO_DE_LOGROS_I$Periodo)
 
-setwd(paste(Carpeta,"2. Salidas","Dashboard",Entrega, sep = slash))
+setwd(paste(Salidas,"Dashboard",Entrega, sep = slash))
 write.csv2(UNIDOS_HOGARES_MUNICIPAL, file = paste("UNIDOS_MUNICIPAL",".csv", sep=""), row.names = FALSE, fileEncoding = "UTF-8")
 write.csv2(MUNICIPAL_ESTADO_DE_LOGROS, file = paste("MUNICIPAL_ESTADO_DE_LOGROS",".csv", sep=""), row.names = FALSE)
 write.csv2(MUNICIPAL_ESTADO_DE_LOGROS_I, file = paste("MUNICIPAL_ESTADO_DE_LOGROS_I",".csv", sep=""), row.names = FALSE)
