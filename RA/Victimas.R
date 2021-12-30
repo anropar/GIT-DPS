@@ -4,7 +4,7 @@
 setwd(Entradas)
 
 # VICTIMAS = read.table("VICTIMAS_201908.txt","»", header=TRUE, encoding="ISO8859-1", stringsAsFactors=FALSE)
-VICTIMAS = read_delim("~/GitHub/GIT-DPS/RA/1. Entradas/UNIVERSO_VICTIMAS_LB.csv", "|", escape_double = FALSE, locale = locale(encoding = "ISO-8859-1"), trim_ws = TRUE)
+VICTIMAS = read_delim("UNIVERSO_VICTIMAS_LB.csv", "|", escape_double = FALSE, locale = locale(encoding = "ISO-8859-1"), trim_ws = TRUE)
 VICTIMAS = VICTIMAS[VICTIMAS$HECHO=="Desplazamiento forzado", c("TIPODOCUMENTO","DOCUMENTO","PRIMERNOMBRE","SEGUNDONOMBRE","PRIMERAPELLIDO","SEGUNDOAPELLIDO","FECHANACIMIENTO","HECHO")]
 
 ###################################
@@ -16,7 +16,7 @@ VICTIMAS$TIPODOCUMENTO = recode_factor(VICTIMAS$TIPODOCUMENTO, `RC` = 1, `NUIP` 
                                                               `PA` = 6, `SR` = 7,
                                                               `PEP` = 8)
 
-setwd(paste(Carpeta,"2. Sabana","General", sep = slash))
+setwd(paste(Carpeta,"General", sep = slash))
 source("Fonetico.R")#Se utiliza para dirigir las salidas a las carpetas definidas.
 
 DATA$FONETICO = paste(fonetico(DATA$E01_1),

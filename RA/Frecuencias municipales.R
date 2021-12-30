@@ -6,13 +6,13 @@
 ###########################
 setwd(Entradas)
 
-LOGROS_HOG = read_delim("Unidos_Logros_Hogar_20211228.txt",
-                         "|", escape_double = FALSE, locale = locale(encoding = "UTF-8"),
-                         trim_ws = TRUE)
-
-LOGROS_INT = read_delim("Unidos_Logros_Integrante_20211227.txt",
-                         "|", escape_double = FALSE, locale = locale(encoding = "ISO-8859-1"),
-                         trim_ws = TRUE)
+# LOGROS_HOG = read_delim("Unidos_Logros_Hogar_20211228.txt",
+#                          "|", escape_double = FALSE, locale = locale(encoding = "UTF-8"),
+#                          trim_ws = TRUE)
+# 
+# LOGROS_INT = read_delim("Unidos_Logros_Integrante_20211227.txt",
+#                          "|", escape_double = FALSE, locale = locale(encoding = "ISO-8859-1"),
+#                          trim_ws = TRUE)
 
 ##########
 #HOGARES
@@ -112,7 +112,7 @@ colnames(MUJERJEFE)[2]="Mujerjefe"
 DATA_Municipal_HOG = Reduce(function(x,y) merge(x = x, y = y, by = c("A03_1"), all.x=TRUE), list(B01,D01,ZONA,IPM,DISCAPACIDAD,INTEGRANTES,PERFILES,VICTIMA,MUJERJEFE,SEXO,PIRAMIDES,ESTADO))#Se unen los dataframe de frecuencias de individuos.
 setnames(DATA_Municipal_HOG, old = "A03_1", new = "CodigoMunicipio")
 
-MUNICIPIOS = read_excel("~/Datos/2018/MUNICIPIOS.xlsx")
+MUNICIPIOS = read_excel("MUNICIPIOS.xlsx")
 setnames(MUNICIPIOS, old = c("CODIGO_MUNICIPIO","DEPARTAMENTO","MUNICIPIO"), new = c("CodigoMunicipio","Departamento","Municipio"))
 
 DATA_Municipal_HOG = merge(DATA_Municipal_HOG, MUNICIPIOS, by="CodigoMunicipio")
@@ -181,7 +181,7 @@ UNIDOS_HOGARES_MUNICIPAL$Periodo = as.character(UNIDOS_HOGARES_MUNICIPAL$Periodo
 MUNICIPAL_ESTADO_DE_LOGROS$Periodo = as.character(MUNICIPAL_ESTADO_DE_LOGROS$Periodo)
 MUNICIPAL_ESTADO_DE_LOGROS_I$Periodo = as.character(MUNICIPAL_ESTADO_DE_LOGROS_I$Periodo)
 
-setwd("~/GitHub/GIT-DPS/RA/2. Sabana/Salidas/Dashboard")
+setwd(paste(Carpeta,"Salidas","Dashboard",Entrega, sep = slash))
 write.csv2(UNIDOS_HOGARES_MUNICIPAL, file = paste("UNIDOS_MUNICIPAL",".csv", sep=""), row.names = FALSE, fileEncoding = "UTF-8")
 write.csv2(MUNICIPAL_ESTADO_DE_LOGROS, file = paste("MUNICIPAL_ESTADO_DE_LOGROS",".csv", sep=""), row.names = FALSE)
 write.csv2(MUNICIPAL_ESTADO_DE_LOGROS_I, file = paste("MUNICIPAL_ESTADO_DE_LOGROS_I",".csv", sep=""), row.names = FALSE)
